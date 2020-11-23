@@ -90,6 +90,12 @@ hour_dummies = pd.get_dummies(df['HOUR'], sparse=True, prefix='HOUR')
 pre_X = pre_X.join(df[['DURING DAYTIME','RUSH HOUR']]).join(hour_dummies)
 print('Done.')
 
+# Add weekday features
+print('Adding weekday features...')
+weekday_dummies = pd.get_dummies(df['WEEKDAY'], sparse=True)
+pre_X = pre_X.join(weekday_dummies)
+print('Done.')
+
 # Add street name features
 print('Adding street name features...')
 df['STREET NAME IS NULL'] = df['ON STREET NAME'].isnull().astype('int')

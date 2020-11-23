@@ -71,6 +71,10 @@ hour_dummies = pd.get_dummies(df['HOUR'], sparse=True, prefix='HOUR')
 
 pre_X = pre_X.join(df[['DURING DAYTIME','RUSH HOUR']]).join(hour_dummies)
 
+# Add weekday features
+weekday_dummies = pd.get_dummies(df['WEEKDAY'], sparse=True)
+pre_X = pre_X.join(weekday_dummies)
+
 # Train-test split
 X = scipy.sparse.csr_matrix(pre_X)
 y = df['CASUALTIES?']
