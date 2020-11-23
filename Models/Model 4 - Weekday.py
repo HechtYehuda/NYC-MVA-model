@@ -80,15 +80,34 @@ X = scipy.sparse.csr_matrix(pre_X)
 y = df['CASUALTIES?']
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
 
-# Models
+# Modeling
+print('Creating logistic regression model...')
 log_reg = LogisticRegression(**log_params)
 log_reg.fit(X_train, y_train)
-y_pred = log_reg.predict(X_test)
-log_f1 = f1_score(y_test, y_pred)
 
+y_train_pred = log_reg.predict(X_train)
+y_test_pred = log_reg.predict(X_test)
+
+log_train_f1 = f1_score(y_train, y_train_pred)
+log_test_f1 = f1_score(y_test, y_test_pred)
+print('Done.')
+
+print('Creating random forest classifier model...') 
 rf_clf = RandomForestClassifier(**rf_params)
 rf_clf.fit(X_train, y_train)
-y_pred = rf_clf.predict(X_test)
-rf_f1 = f1_score(y_test, y_pred)
 
-print(f'Logistic Regression F1: {log_f1}\nRandom Forest F1: {rf_f1}')
+y_train_pred = rf_clf.predict(X_train)
+y_test_pred = rf_clf.predict(X_test)
+
+rf_train_f1 = f1_score(y_train, y_train_pred)
+rf_test_f1 = f1_score(y_test, y_test_pred)
+
+print(f'Train scores:\n    Logistic Regression F1: {log_train_f1}\n    Random Forest F1: {rf_train_f1}')
+print(f'Test scores:\n    Logistic Regression F1: {log_test_f1}\n    Random Forest F1: {rf_test_f1}')
+
+cm = confusion_matrix(y_test, y_test_pred)
+_ = sns.heatmap(cm)
+_ = plt.xlabel('True casualties')
+_ = plt.ylabel('Predicted casualties')
+
+_ = plt.show()
