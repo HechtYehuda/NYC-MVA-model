@@ -13,3 +13,4 @@ F1 scores were used to calculate model accuracy, owing to the imbalanced nature 
 | 3 | K-means clusters \| Boroughs \| Years \| Months \| Seasons \| Hour of day \| Daytime \| Rush hour | 0.173862 | 0.178708 | 0.174438 | 0.175753 | 
 | 4 | K-means clusters \| Boroughs \| Years \| Months \| Seasons \| Hour of day \| Daytime \| Rush hour \| Day of week | 0.173933 |0.185982 | 0.174892 | 0.174815 |
 | 5 | K-means clusters \| Boroughs \| Years \| Months \| Seasons \| Hour of day \| Daytime \| Rush hour \| Day of week \| Street names | 0.193007 | 0.181778 | 0.190340 | 0.176477 |
+| 6 | K-means clusters \| Boroughs \| Years \| Months \| Seasons \| Hour of day \| Daytime \| Rush hour \| Day of week \| Street names \| Cross street names | 0.185801 | 0.228225 | 0.182672 | 0.182068 | 
