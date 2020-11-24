@@ -127,20 +127,6 @@ y = df['CASUALTIES?']
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
 
-# Models
-print('Modeling logistic regression...')
-log_reg = LogisticRegression(**log_params)
-log_reg.fit(X_train, y_train)
-y_pred = log_reg.predict(X_test)
-log_f1 = f1_score(y_test, y_pred)
-
-print('Modeling random forest classifier...')
-rf_clf = RandomForestClassifier(**rf_params)
-rf_clf.fit(X_train, y_train)
-y_pred = rf_clf.predict(X_test)
-rf_f1 = f1_score(y_test, y_pred)
-print('Done.')
-
 # Modeling
 print('Creating logistic regression model...')
 log_reg = LogisticRegression(**log_params)
