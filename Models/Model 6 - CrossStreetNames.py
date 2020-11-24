@@ -27,7 +27,7 @@ df['CRASH TIME'] = pd.to_datetime(df['CRASH TIME'])
 df['CASUALTIES?'] = 0
 mask = df['TOTAL PEDESTRIAN CASUALTIES'] != 0
 df.loc[mask, 'CASUALTIES?'] = 1
-df.loc[df['TOTAL PEDESTRIAN CASUALTIES'] != 1, ['TOTAL PEDESTRIAN CASUALTIES','CASUALTIES?']].sample    (5)
+df.loc[df['TOTAL PEDESTRIAN CASUALTIES'] != 1, ['TOTAL PEDESTRIAN CASUALTIES','CASUALTIES?']].sample(5)
 
 # Random Forest hyperparameters
 rf_params = {
