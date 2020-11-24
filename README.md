@@ -2,7 +2,7 @@
 
 A model to predict pedestrian casualties based on accidents in NYC between 2012 and 2020.
 
-The _Models_ folder contains the Python code to run each model. Data to be added to a DropBox and linked shortly.
+The _Models_ folder contains the Python code to run each model. Models are numbered accordingly. Data to be added to a DropBox and linked shortly.
 
 F1 scores were used to calculate model accuracy, owing to the imbalanced nature of the data. LR = Logistic Regression; RF = Random Forest.
 
