@@ -30,33 +30,67 @@ df.loc[df['TOTAL PEDESTRIAN CASUALTIES'] != 1, ['TOTAL PEDESTRIAN CASUALTIES','C
 print('Done.')
 
 # K Means analysis
-print('Beginning K-Means anlysis.')
-f1_list = []
-for i in range(2,101):
-    kmeans = KMeans(n_clusters=i, random_state=42)
-    kmeans.fit(df[['LATITUDE','LONGITUDE']].values)
-    df_clusters = pd.Series(kmeans.labels_)
-    cluster_dummies = pd.get_dummies(df_clusters)
-    X = scipy.sparse.csr_matrix(cluster_dummies)
-    y = df['CASUALTIES?']
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
-    log_reg = LogisticRegression(class_weight='balanced', max_iter=10_000)
-    log_reg.fit(X_train, y_train)
-    y_pred = log_reg.predict(X_test)
-    log_f1 = f1_score(y_test, y_pred)
-    print(f'# Clusters: {i}\n    F1 score: {log_f1}')
-    f1_list.append(log_f1)
+max_k = {}
+for current_borough in df['BOROUGH'].unique():
+    print(f'{current_borough.title()} K-Means analysis')
+    borough = df[df['BOROUGH'] == current_borough]
+    f1_list = []
+    for i in range(2,21):
+        kmeans = KMeans(n_clusters=i, random_state=42)
+        kmeans.fit(borough[['LATITUDE','LONGITUDE']].values)
+        df_clusters = pd.Series(kmeans.labels_)
+        cluster_dummies = pd.get_dummies(df_clusters)
+        X = scipy.sparse.csr_matrix(cluster_dummies)
+        y = borough['CASUALTIES?']
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+        log_reg = LogisticRegression(class_weight='balanced', max_iter=10_000)
+        log_reg.fit(X_train, y_train)
+        y_pred = log_reg.predict(X_test)
+        log_f1 = f1_score(y_test, y_pred)
+        print(f'# Clusters: {i}\n    F1 score: {log_f1}')
+        f1_list.append(log_f1)
+    _ = plt.figure(figsize=(10,10))
+    _ = plt.plot(range(2,21), f1_list, 'k-')
+    _ = plt.grid()
+    _ = plt.xlabel('# Clusters', fontsize=14)
+    _ = plt.ylabel('F1 Score', fontsize=14)
+    _ = plt.title(f'{current_borough} F1 Cluster Analysis\n', fontsize=22)
+    _ = plt.show()
+    max_k[current_borough] = {
+                        'K':f1_list.index(max(f1_list))+2,
+                        'Score': max(f1_list)
+            }
+print(max_k)
 
-# Plot F1 cluster analysis
-_ = plt.figure(figsize=(10,10))
-_ = plt.plot(range(2,101), f1_list, 'k-')
-_ = plt.grid()
-_ = plt.xlabel('# Clusters', fontsize=14)
-_ = plt.ylabel('F1 Score', fontsize=14)
-_ = plt.title('F1 Cluster Analysis\n', fontsize=22)
-_ = plt.show()
-plt.savefig('F1 Cluster Analysis')
 
+
+# print('Beginning K-Means anlysis.')
+# f1_list = []
+# for i in range(2,101):
+#     kmeans = KMeans(n_clusters=i, random_state=42)
+#     kmeans.fit(df[['LATITUDE','LONGITUDE']].values)
+#     df_clusters = pd.Series(kmeans.labels_)
+#     cluster_dummies = pd.get_dummies(df_clusters)
+#     X = scipy.sparse.csr_matrix(cluster_dummies)
+#     y = df['CASUALTIES?']
+#     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+#     log_reg = LogisticRegression(class_weight='balanced', max_iter=10_000)
+#     log_reg.fit(X_train, y_train)
+#     y_pred = log_reg.predict(X_test)
+#     log_f1 = f1_score(y_test, y_pred)
+#     print(f'# Clusters: {i}\n    F1 score: {log_f1}')
+#     f1_list.append(log_f1)
+# 
+# # Plot F1 cluster analysis
+# _ = plt.figure(figsize=(10,10))
+# _ = plt.plot(range(2,101), f1_list, 'k-')
+# _ = plt.grid()
+# _ = plt.xlabel('# Clusters', fontsize=14)
+# _ = plt.ylabel('F1 Score', fontsize=14)
+# _ = plt.title('F1 Cluster Analysis\n', fontsize=22)
+# _ = plt.show()
+# plt.savefig('F1 Cluster Analysis')
+# 
 # Best K
 n_cluster = f1_list.index(max(f1_list))+2
 print(n_cluster, f1_list[n_cluster])
