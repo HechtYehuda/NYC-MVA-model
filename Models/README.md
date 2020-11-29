@@ -1,6 +1,4 @@
-# NYC MVA model
-
-A model to predict pedestrian casualties based on accidents in NYC between 2012 and 2020.
+# Summary of models
 
 The _Models_ folder contains the Python code to run each model. Models are numbered accordingly. Data to be added to a DropBox and linked shortly.
 
