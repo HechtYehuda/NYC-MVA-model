@@ -1,17 +1,7 @@
 # NYC MVA model
 
-A model to predict pedestrian casualties based on accidents in NYC between 2012 and 2020.
+Between 2012 and 2020, there were close to 2 million motor vehicle accidents in New York City. A significant number of these accidents involved non-drivers, such as pedestrians, cyclists, etc. This model attempts to predict accidents involving pedestrians, with the purpose of determining patterns for new traffic recommendations and police presence.
 
-The _Models_ folder contains the Python code to run each model. Models are numbered accordingly. Data to be added to a DropBox and linked shortly.
+The data was collected a number of months ago from the [NYC OpenData](https://data.cityofnewyork.us/Public-Safety/Motor-Vehicle-Collisions-Crashes/h9gi-nx95) dataset. The dataset is constantly updated, and as such, the current data contains more accidents than the models trained here. 
 
-F1 scores were used to calculate model accuracy, owing to the imbalanced nature of the data. LR = Logistic Regression; RF = Random Forest.
-
-| Model # | Predictors | LR Train | RF Train | LR Test | RF Test |
-| :---: | :--- | :---: | :---: | :---: | :---: |
-| 1 | K-means clusters <br/> Boroughs | 0.166508 | 0.166507 | 0.166727 | 0.168079 |
-| 2 | K-means clusters <br/> Boroughs <br/> Years <br/> Months <br/> Seasons | 0.167805 | 0.175968 | 0.167534 | 0.168375 |
-| 3 | K-means clusters <br/> Boroughs <br/> Years <br/> Months <br/> Seasons <br/> Hour of day <br/> Daytime <br/> Rush hour | 0.173862 | 0.178708 | 0.174438 | 0.175753 | 
-| 4 | K-means clusters <br/> Boroughs <br/> Years <br/> Months <br/> Seasons <br/> Hour of day <br/> Daytime <br/> Rush hour <br/> Day of week | 0.173933 |0.185982 | 0.174892 | 0.174815 |
-| 5 | K-means clusters <br/> Boroughs <br/> Years <br/> Months <br/> Seasons <br/> Hour of day <br/> Daytime <br/> Rush hour <br/> Day of week <br/> Street names | 0.196917 | 0.193533 | 0.193701 | 0.185183 |
-| 6 | K-means clusters <br/> Boroughs <br/> Years <br/> Months <br/> Seasons <br/> Hour of day <br/> Daytime <br/> Rush hour <br/> Day of week <br/> Street names <br/> Cross street names | 0.189979 | 0.228807 | 0.186668 | 0.186783 | 
-| 7 | K-means clusters <br/> Boroughs <br/> Years <br/> Months <br/> Seasons <br/> Hour of day <br/> Daytime <br/> Rush hour <br/> Day of week <br/> Street names <br/> Cross street names <br/> Contributing factors | 0.226696 | 0.224418 | 0.222967 | 0.211143 |
+The data contains geographical and borough information, along with date and time of each accident. A contributing factor was applied to each accident, as well as the vehicle types. The data set also contains the number of persons injured or killed; these are then broken down into pedestrians, cyclists, and motorists injured or killed. To develop a target, I combined` the `NUMBER OF PEDESTRIANS INJURED`, `NUMBER OF PEDESTRIANS KILLED`, `NUMBER OF CYCLISTS INJURED`, and `NUMBER OF CYCLISTS KILLED`  into a single column called `TOTAL PEDESTRIAN CASUALTIES`. I then created the target based on the nonzero records contained in the `TOTAL PEDESTRIAN CASUALTIES` column, simply called `CASUALTIES?` and containing a 1 for all nonzero records, and a 0 for all others.
