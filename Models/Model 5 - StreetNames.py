@@ -10,7 +10,7 @@ from sklearn.cluster import KMeans
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics import f1_score, confusion_matrix, make_scorer
 
 data_path = r'data/clean_df.csv.gz'
@@ -89,15 +89,17 @@ print('Adding street name features...')
 df['STREET NAME IS NULL'] = df['ON STREET NAME'].isnull().astype('int')
 df['ON STREET NAME'] = df['ON STREET NAME'].fillna('')
 
-tfidf = TfidfVectorizer(min_df=50, max_df=.5)
-tfidf_df = pd.DataFrame.sparse.from_spmatrix(tfidf.fit_transform(df['ON STREET NAME']))
-tfidf_pre = tfidf_df.add_prefix('ON')
-pre_X = pre_X.join(tfidf_pre).join(df['STREET NAME IS NULL'])
+count = CountVectorizer(min_df=50, max_df=.5)
+count_df = pd.DataFrame.sparse.from_spmatrix(count.fit_transform(df['ON STREET NAME']))
+count_pre = count_df.add_prefix('ON')
+pre_X = pre_X.join(count_pre).join(df['STREET NAME IS NULL'])
 print('Done.')
 
 # Train-test split
+print('Splitting data...')
 X = scipy.sparse.csc_matrix(pre_X)
 y = df['CASUALTIES?']
+print('Done.')
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
 

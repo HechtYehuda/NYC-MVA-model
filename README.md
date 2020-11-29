@@ -12,6 +12,6 @@ F1 scores were used to calculate model accuracy, owing to the imbalanced nature 
 | 2 | K-means clusters <br/> Boroughs <br/> Years <br/> Months <br/> Seasons | 0.167805 | 0.175968 | 0.167534 | 0.168375 |
 | 3 | K-means clusters <br/> Boroughs <br/> Years <br/> Months <br/> Seasons <br/> Hour of day <br/> Daytime <br/> Rush hour | 0.173862 | 0.178708 | 0.174438 | 0.175753 | 
 | 4 | K-means clusters <br/> Boroughs <br/> Years <br/> Months <br/> Seasons <br/> Hour of day <br/> Daytime <br/> Rush hour <br/> Day of week | 0.173933 |0.185982 | 0.174892 | 0.174815 |
-| 5 | K-means clusters <br/> Boroughs <br/> Years <br/> Months <br/> Seasons <br/> Hour of day <br/> Daytime <br/> Rush hour <br/> Day of week <br/> Street names | 0.193007 | 0.181778 | 0.190340 | 0.176477 |
-| 6 | K-means clusters <br/> Boroughs <br/> Years <br/> Months <br/> Seasons <br/> Hour of day <br/> Daytime <br/> Rush hour <br/> Day of week <br/> Street names <br/> Cross street names | 0.185801 | 0.228225 | 0.182672 | 0.182068 | 
-| 7 | K-means clusters <br/> Boroughs <br/> Years <br/> Months <br/> Seasons <br/> Hour of day <br/> Daytime <br/> Rush hour <br/> Day of week <br/> Street names <br/> Cross street names <br/> Contributing factors | 0.228699 | 0.217268 | 0.225072 | 0.206266 |
+| 5 | K-means clusters <br/> Boroughs <br/> Years <br/> Months <br/> Seasons <br/> Hour of day <br/> Daytime <br/> Rush hour <br/> Day of week <br/> Street names | 0.196917 | 0.193533 | 0.193701 | 0.185183 |
+| 6 | K-means clusters <br/> Boroughs <br/> Years <br/> Months <br/> Seasons <br/> Hour of day <br/> Daytime <br/> Rush hour <br/> Day of week <br/> Street names <br/> Cross street names | 0.189979 | 0.228807 | 0.186668 | 0.186783 | 
+| 7 | K-means clusters <br/> Boroughs <br/> Years <br/> Months <br/> Seasons <br/> Hour of day <br/> Daytime <br/> Rush hour <br/> Day of week <br/> Street names <br/> Cross street names <br/> Contributing factors | 0.226696 | 0.224418 | 0.222967 | 0.211143 |

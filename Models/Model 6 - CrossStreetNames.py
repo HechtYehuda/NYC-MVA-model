@@ -10,7 +10,7 @@ from sklearn.cluster import KMeans
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics import f1_score, confusion_matrix, make_scorer
 
 # Import data
@@ -55,7 +55,7 @@ kmeans_params = {
 }
 
 # TF-IDF hyperparameters
-tfidf_params = {
+count_params = {
     'min_df':30,
     'max_df':0.9
 }
@@ -101,10 +101,10 @@ print('Adding street name features...')
 df['STREET NAME IS NULL'] = df['ON STREET NAME'].isnull().astype('int')
 df['ON STREET NAME'] = df['ON STREET NAME'].fillna('')
 
-tfidf = TfidfVectorizer(**tfidf_params)
-tfidf_df = pd.DataFrame.sparse.from_spmatrix(tfidf.fit_transform(df['ON STREET NAME']))
-tfidf_pre = tfidf_df.add_prefix('ON_')
-pre_X_dense = pre_X.join(tfidf_pre).join(df['STREET NAME IS NULL'])
+on_count = CountVectorizer(**count_params)
+on_count_df = pd.DataFrame.sparse.from_spmatrix(on_count.fit_transform(df['ON STREET NAME']))
+on_count_pre = on_count_df.add_prefix('ON_')
+pre_X_dense = pre_X.join(on_count_pre).join(df['STREET NAME IS NULL'])
 pre_X = scipy.sparse.csr_matrix(pre_X)
 print('Done.')
 
@@ -113,19 +113,21 @@ print('Adding cross street name features...')
 df['CROSS STREET NAME IS NULL'] = df['CROSS STREET NAME'].isnull().astype('int')
 df['CROSS STREET NAME'] = df['CROSS STREET NAME'].fillna('')
 
-tfidf = TfidfVectorizer(**tfidf_params)
-tfidf_df = pd.DataFrame.sparse.from_spmatrix(tfidf.fit_transform(df['CROSS STREET NAME']))
-tfidf_pre = tfidf_df.add_prefix('CROSS_')
-off_dense = tfidf_pre.join(df['CROSS STREET NAME IS NULL'])
+cross_count = CountVectorizer(**count_params)
+cross_count_df = pd.DataFrame.sparse.from_spmatrix(cross_count.fit_transform(df['CROSS STREET NAME']))
+cross_count_pre = cross_count_df.add_prefix('CROSS_')
+off_dense = cross_count_pre.join(df['CROSS STREET NAME IS NULL'])
 off_sparse = scipy.sparse.csr_matrix(off_dense)
 pre_X = scipy.sparse.hstack([pre_X, off_sparse])
 print('Done.')
 
 # Train-test split
+print('Splitting data...')
 X = scipy.sparse.csr_matrix(pre_X)
 y = df['CASUALTIES?']
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+print('Done.')
 
 # Modeling
 print('Creating logistic regression model...')

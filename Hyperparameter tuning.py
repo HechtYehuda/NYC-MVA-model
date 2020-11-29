@@ -30,8 +30,9 @@ df.loc[df['TOTAL PEDESTRIAN CASUALTIES'] != 1, ['TOTAL PEDESTRIAN CASUALTIES','C
 print('Done.')
 
 # K Means analysis
+boroughs = ['MANHATTAN','BROOKLYN','STATEN ISLAND','QUEENS','BRONX']
 max_k = {}
-for current_borough in df['BOROUGH'].unique():
+for current_borough in boroughs:
     print(f'{current_borough.title()} K-Means analysis')
     borough = df[df['BOROUGH'] == current_borough]
     f1_list = []
