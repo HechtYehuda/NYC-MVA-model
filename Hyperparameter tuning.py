@@ -11,7 +11,7 @@ from sklearn.kernel_approximation import RBFSampler
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.cluster import KMeans
-from sklearn.metrics import f1_score, confusion_matrix, make_scorer
+from sklearn.metrics import recall_score, confusion_matrix, make_scorer
 
 # Import data
 print('Importing data...')
@@ -35,7 +35,7 @@ max_k = {}
 for current_borough in boroughs:
     print(f'{current_borough.title()} K-Means analysis')
     borough = df[df['BOROUGH'] == current_borough]
-    f1_list = []
+    recall_list = []
     for i in range(2,21):
         kmeans = KMeans(n_clusters=i, random_state=42)
         kmeans.fit(borough[['LATITUDE','LONGITUDE']].values)
@@ -47,26 +47,26 @@ for current_borough in boroughs:
         log_reg = LogisticRegression(class_weight='balanced', max_iter=10_000)
         log_reg.fit(X_train, y_train)
         y_pred = log_reg.predict(X_test)
-        log_f1 = f1_score(y_test, y_pred)
-        print(f'# Clusters: {i}\n    F1 score: {log_f1}')
-        f1_list.append(log_f1)
+        log_recall = recall_score(y_test, y_pred)
+        print(f'# Clusters: {i}\n    F1 score: {log_recall}')
+        recall_list.append(log_recall)
     _ = plt.figure(figsize=(10,10))
-    _ = plt.plot(range(2,21), f1_list, 'k-')
+    _ = plt.plot(range(2,21), recall_list, 'k-')
     _ = plt.grid()
     _ = plt.xlabel('# Clusters', fontsize=14)
     _ = plt.ylabel('F1 Score', fontsize=14)
     _ = plt.title(f'{current_borough} F1 Cluster Analysis\n', fontsize=22)
     _ = plt.show()
     max_k[current_borough] = {
-                        'K':f1_list.index(max(f1_list))+2,
-                        'Score': max(f1_list)
+                        'K':recall_list.index(max(recall_list))+2,
+                        'Score': max(recall_list)
             }
 print(max_k)
 
 
 
 # print('Beginning K-Means anlysis.')
-# f1_list = []
+# recall_list = []
 # for i in range(2,101):
 #     kmeans = KMeans(n_clusters=i, random_state=42)
 #     kmeans.fit(df[['LATITUDE','LONGITUDE']].values)
@@ -78,13 +78,13 @@ print(max_k)
 #     log_reg = LogisticRegression(class_weight='balanced', max_iter=10_000)
 #     log_reg.fit(X_train, y_train)
 #     y_pred = log_reg.predict(X_test)
-#     log_f1 = f1_score(y_test, y_pred)
-#     print(f'# Clusters: {i}\n    F1 score: {log_f1}')
-#     f1_list.append(log_f1)
+#     log_recall = recall_score(y_test, y_pred)
+#     print(f'# Clusters: {i}\n    F1 score: {log_recall}')
+#     recall_list.append(log_recall)
 # 
 # # Plot F1 cluster analysis
 # _ = plt.figure(figsize=(10,10))
-# _ = plt.plot(range(2,101), f1_list, 'k-')
+# _ = plt.plot(range(2,101), recall_list, 'k-')
 # _ = plt.grid()
 # _ = plt.xlabel('# Clusters', fontsize=14)
 # _ = plt.ylabel('F1 Score', fontsize=14)
@@ -93,8 +93,8 @@ print(max_k)
 # plt.savefig('F1 Cluster Analysis')
 # 
 # Best K
-n_cluster = f1_list.index(max(f1_list))+2
-print(n_cluster, f1_list[n_cluster])
+n_cluster = recall_list.index(max(recall_list))+2
+print(n_cluster, recall_list[n_cluster])
 
 # Plot K-means clusters
 kmeans = KMeans(n_clusters=n_cluster, random_state=42)
@@ -124,7 +124,7 @@ params = {
     'verbose':[2]
 }
 
-cv = GridSearchCV(estimator=RandomForestClassifier(), param_grid=params, scoring=make_scorer(f1_score), n_jobs=-1)
+cv = GridSearchCV(estimator=RandomForestClassifier(), param_grid=params, scoring=make_scorer(recall_score), n_jobs=-1)
 cv.fit(X_train, y_train)
 
 cv_results = pd.DataFrame(cv.cv_results_)
@@ -136,4 +136,4 @@ rf_clf = RandomForestClassifier(max_depth=15, n_estimators=100, class_weight='ba
 rf_clf.fit(X_train, y_train)
 
 y_pred = rf_clf.predict(X_test)
-f1_score(y_test, y_pred)
+recall_score(y_test, y_pred)
