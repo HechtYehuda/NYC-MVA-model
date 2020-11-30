@@ -1,4 +1,3 @@
-# Import libraries
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -12,9 +11,7 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics import f1_score, confusion_matrix, make_scorer
-from sklearn.experimental import enable_hist_gradient_boosting
-from sklearn.ensemble import HistGradientBoostingClassifier
+from sklearn.metrics import recall_score, confusion_matrix, make_scorer
 
 # Import data
 print('Importing data...')
@@ -49,33 +46,31 @@ log_params = {
     'n_jobs':-1
 }
 
-# KMeans hyperparameters
-kmeans_params = {
-    'n_clusters':52,
-    'random_state':42
-}
-print('Done.')
 
 # Fit K-Means
 print('Fitting K-means clusters...')
-clusters=52
-kmeans = KMeans(**kmeans_params)
-kmeans.fit(df[['LATITUDE','LONGITUDE']].values)
+counts = [7, 3, 4, 3, 5]
+boroughs = ['MANHATTAN','QUEENS','BROOKLYN','STATEN ISLAND','BRONX']
+for n, borough in zip(counts,boroughs):
+    print(f'    Calculating {borough.title()} clusters...')
+    
+    borough_accidents = df[df['BOROUGH'] == borough]
+    kmeans = KMeans(n_clusters=n, random_state=42)
+    kmeans.fit(borough_accidents[['LATITUDE','LONGITUDE']].values)
+    
+    df.loc[df['BOROUGH'] == borough, f'{borough} CLUSTERS'] = kmeans.labels_
+
 print('Done.')
 
-# Plot K clusters
-_ = plt.scatter(df['LATITUDE'], df['LONGITUDE'], alpha=0.4)
-_ = plt.scatter(kmeans.cluster_centers_[:,0], kmeans.cluster_centers_[:,1])
-_ = plt.show()
-
-df['CLUSTERS'] = kmeans.labels_
 
 # Create dummies
 print('Creating feature set...')
 borough_dummies = pd.get_dummies(df['BOROUGH'], sparse=True)
-cluster_dummies = pd.get_dummies(df['CLUSTERS'], prefix='CLUSTER', sparse=True)
+borough_clusters = [borough+' CLUSTERS' for borough in boroughs]
+cluster_dummies = pd.get_dummies(df[borough_clusters].fillna(''), prefix='CLUSTER', sparse=True)
 pre_X = cluster_dummies.join(borough_dummies)
 
+# Train-test split
 X = scipy.sparse.csr_matrix(pre_X)
 y = df['CASUALTIES?']
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
@@ -89,8 +84,8 @@ log_reg.fit(X_train, y_train)
 y_train_pred = log_reg.predict(X_train)
 y_test_pred = log_reg.predict(X_test)
 
-log_train_f1 = f1_score(y_train, y_train_pred)
-log_test_f1 = f1_score(y_test, y_test_pred)
+log_train_recall = recall_score(y_train, y_train_pred)
+log_test_recall = recall_score(y_test, y_test_pred)
 print('Done.')
 
 print('Creating random forest classifier model...') 
@@ -100,13 +95,14 @@ rf_clf.fit(X_train, y_train)
 y_train_pred = rf_clf.predict(X_train)
 y_test_pred = rf_clf.predict(X_test)
 
-rf_train_f1 = f1_score(y_train, y_train_pred)
-rf_test_f1 = f1_score(y_test, y_test_pred)
+rf_train_recall = recall_score(y_train, y_train_pred)
+rf_test_recall = recall_score(y_test, y_test_pred)
 
-print(f'Train scores:\n    Logistic Regression F1: {log_train_f1}\n    Random Forest F1: {rf_train_f1}')
-print(f'Test scores:\n    Logistic Regression F1: {log_test_f1}\n    Random Forest F1: {rf_test_f1}')
+print(f'Train scores:\n    Logistic Regression Recall: {log_train_recall}\n    Random Forest Recall: {rf_train_recall}')
+print(f'Test scores:\n    Logistic Regression Recall: {log_test_recall}\n    Random Forest Recall: {rf_test_recall}')
 
-cm = confusion_matrix(y_test, y_test_pred)
+cm = confusion_matrix(y_test, y_test_pred, normalize='true')
+
 _ = sns.heatmap(cm)
 _ = plt.xlabel('True casualties')
 _ = plt.ylabel('Predicted casualties')

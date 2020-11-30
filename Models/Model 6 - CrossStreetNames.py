@@ -154,7 +154,7 @@ rf_test_f1 = f1_score(y_test, y_test_pred)
 print(f'Train scores:\n    Logistic Regression F1: {log_train_f1}\n    Random Forest F1: {rf_train_f1}')
 print(f'Test scores:\n    Logistic Regression F1: {log_test_f1}\n    Random Forest F1: {rf_test_f1}')
 
-cm = confusion_matrix(y_test, y_test_pred)
+cm = confusion_matrix(y_test, y_test_pred, normalize='true')
 _ = sns.heatmap(cm)
 _ = plt.xlabel('True casualties')
 _ = plt.ylabel('Predicted casualties')

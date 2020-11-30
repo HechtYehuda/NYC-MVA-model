@@ -2,11 +2,11 @@
 
 The _Models_ folder contains the Python code to run each model. Models are numbered accordingly. Data to be added to a DropBox and linked shortly.
 
-F1 scores were used to calculate model accuracy, owing to the imbalanced nature of the data. LR = Logistic Regression; RF = Random Forest.
+Recall scores were used to calculate model accuracy, owing to the imbalanced nature of the data and the desire to minimize false negatives. LR = Logistic Regression; RF = Random Forest.
 
 | Model # | Predictors | LR Train | RF Train | LR Test | RF Test |
 | :---: | :--- | :---: | :---: | :---: | :---: |
-| 1 | K-means clusters <br/> Boroughs | 0.166508 | 0.166507 | 0.166727 | 0.168079 |
+| 1 | K-means clusters <br/> Boroughs | 0.664556 | 0.664556 | 0.669790 | 0.669790 |
 | 2 | K-means clusters <br/> Boroughs <br/> Years <br/> Months <br/> Seasons | 0.167805 | 0.175968 | 0.167534 | 0.168375 |
 | 3 | K-means clusters <br/> Boroughs <br/> Years <br/> Months <br/> Seasons <br/> Hour of day <br/> Daytime <br/> Rush hour | 0.173862 | 0.178708 | 0.174438 | 0.175753 | 
 | 4 | K-means clusters <br/> Boroughs <br/> Years <br/> Months <br/> Seasons <br/> Hour of day <br/> Daytime <br/> Rush hour <br/> Day of week | 0.173933 |0.185982 | 0.174892 | 0.174815 |
