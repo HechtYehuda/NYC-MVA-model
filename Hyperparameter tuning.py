@@ -139,7 +139,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_
 print('Done.')
 
 # Random Forest grid search
-cv = GridSearchCV(estimator=RandomForestClassifier(), param_grid=params, scoring=make_scorer(recall_score), n_jobs=-1)
+cv = GridSearchCV(estimator=RandomForestClassifier(), param_grid=params, scoring=make_scorer(recall_score), n_jobs=-1, return_train_score=True)
 cv.fit(X_train, y_train)
 
 cv_results = pd.DataFrame(cv.cv_results_)
