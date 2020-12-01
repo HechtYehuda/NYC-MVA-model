@@ -92,35 +92,7 @@ for n, borough in zip(k_clusters,boroughs):
     kmeans.fit(borough_accidents[['LATITUDE','LONGITUDE']].values)
     
     df.loc[df['BOROUGH'] == borough, f'{borough} CLUSTERS'] = kmeans.labels_
-
 print('Done.')
-# print('Beginning K-Means anlysis.')
-# recall_list = []
-# for i in range(2,101):
-#     kmeans = KMeans(n_clusters=i, random_state=42)
-#     kmeans.fit(df[['LATITUDE','LONGITUDE']].values)
-#     df_clusters = pd.Series(kmeans.labels_)
-#     cluster_dummies = pd.get_dummies(df_clusters)
-#     X = scipy.sparse.csr_matrix(cluster_dummies)
-#     y = df['CASUALTIES?']
-#     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
-#     log_reg = LogisticRegression(class_weight='balanced', max_iter=10_000)
-#     log_reg.fit(X_train, y_train)
-#     y_pred = log_reg.predict(X_test)
-#     log_recall = recall_score(y_test, y_pred)
-#     print(f'# Clusters: {i}\n    Recall score: {log_recall}')
-#     recall_list.append(log_recall)
-# 
-# # Plot Recall cluster analysis
-# _ = plt.figure(figsize=(10,10))
-# _ = plt.plot(range(2,101), recall_list, 'k-')
-# _ = plt.grid()
-# _ = plt.xlabel('# Clusters', fontsize=14)
-# _ = plt.ylabel('Recall Score', fontsize=14)
-# _ = plt.title('Recall Cluster Analysis\n', fontsize=22)
-# _ = plt.show()
-# plt.savefig('Recall Cluster Analysis')
-# 
 
 # Create feature set
 print('Creating feature set...')
