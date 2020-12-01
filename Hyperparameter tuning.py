@@ -66,9 +66,8 @@ for space, current_borough in zip(subplots, boroughs):
     plt.subplot(space)
     plt.plot(range(2,21), recall_list, 'k-')
     plt.grid()
-    plt.xlabel('# Clusters', fontsize=12)
+    plt.xlabel(f'{current_borough.title()} Clusters', fontsize=12)
     plt.ylabel('Recall Score', fontsize=12)
-    plt.title('\n\n'+current_borough, fontsize=14)
     plt.xticks(range(2,21), rotation=60, ha='right')
     max_k[current_borough] = {
                         'K':recall_list.index(max(recall_list))+2,
