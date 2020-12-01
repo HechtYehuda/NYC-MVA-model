@@ -69,7 +69,7 @@ for space, current_borough in zip(subplots, boroughs):
     plt.xlabel('# Clusters', fontsize=12)
     plt.ylabel('Recall Score', fontsize=12)
     plt.title(current_borough, fontsize=14)
-    plt.xticks(range(2,21))
+    plt.xticks(range(2,21), rotation=45, ha='right')
     max_k[current_borough] = {
                         'K':recall_list.index(max(recall_list))+2,
                         'Score': max(recall_list)
