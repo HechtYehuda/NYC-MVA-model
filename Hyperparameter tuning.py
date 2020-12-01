@@ -13,6 +13,17 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.cluster import KMeans
 from sklearn.metrics import recall_score, confusion_matrix, make_scorer
 
+# Random Forest hyperparameters 
+params = {
+    'max_depth':[1,2,5,10,15],
+    'n_estimators':[10,30,100],
+    'class_weight': ['balanced'],
+    'max_features':[None],
+    'random_state': [42],
+    'n_jobs':[-1],
+    'verbose':[2]
+}
+
 # Import data
 print('Importing data...')
 data_path = r'data/clean_df.csv.gz'
@@ -31,8 +42,10 @@ print('Done.')
 
 # K Means analysis
 boroughs = ['MANHATTAN','BROOKLYN','STATEN ISLAND','QUEENS','BRONX']
+subplots = [231,232,233,234,235]
+plt.figure()
 max_k = {}
-for current_borough in boroughs:
+for space, current_borough in zip(subplots, boroughs):
     print(f'{current_borough.title()} K-Means analysis')
     borough = df[df['BOROUGH'] == current_borough]
     recall_list = []
@@ -48,23 +61,40 @@ for current_borough in boroughs:
         log_reg.fit(X_train, y_train)
         y_pred = log_reg.predict(X_test)
         log_recall = recall_score(y_test, y_pred)
-        print(f'# Clusters: {i}\n    F1 score: {log_recall}')
+        print(f'# Clusters: {i}\n    Recall score: {log_recall}')
         recall_list.append(log_recall)
-    _ = plt.figure(figsize=(10,10))
-    _ = plt.plot(range(2,21), recall_list, 'k-')
-    _ = plt.grid()
-    _ = plt.xlabel('# Clusters', fontsize=14)
-    _ = plt.ylabel('F1 Score', fontsize=14)
-    _ = plt.title(f'{current_borough} F1 Cluster Analysis\n', fontsize=22)
-    _ = plt.show()
+    plt.subplot(space)
+    plt.plot(range(2,21), recall_list, 'k-')
+    plt.grid()
+    plt.xlabel('# Clusters', fontsize=12)
+    plt.ylabel('Recall Score', fontsize=12)
+    plt.title(current_borough, fontsize=14)
+    plt.xticks(range(2,21))
     max_k[current_borough] = {
                         'K':recall_list.index(max(recall_list))+2,
                         'Score': max(recall_list)
             }
-print(max_k)
 
+plt.show()
+plt.savefig('K-Means tuning.png')
+for i in max_k:
+    print(f'{i}\n    {i.values()}')
 
+# Fit K-Means
+print('Fitting K-means clusters...')
+k_clusters = []
+for i in max_k:
+    k_clusters.append(i['K'])
+for n, borough in zip(k_clusters,boroughs):
+    print(f'    Calculating {borough.title()} clusters...')
+    
+    borough_accidents = df[df['BOROUGH'] == borough]
+    kmeans = KMeans(n_clusters=n, random_state=42)
+    kmeans.fit(borough_accidents[['LATITUDE','LONGITUDE']].values)
+    
+    df.loc[df['BOROUGH'] == borough, f'{borough} CLUSTERS'] = kmeans.labels_
 
+print('Done.')
 # print('Beginning K-Means anlysis.')
 # recall_list = []
 # for i in range(2,101):
@@ -79,60 +109,45 @@ print(max_k)
 #     log_reg.fit(X_train, y_train)
 #     y_pred = log_reg.predict(X_test)
 #     log_recall = recall_score(y_test, y_pred)
-#     print(f'# Clusters: {i}\n    F1 score: {log_recall}')
+#     print(f'# Clusters: {i}\n    Recall score: {log_recall}')
 #     recall_list.append(log_recall)
 # 
-# # Plot F1 cluster analysis
+# # Plot Recall cluster analysis
 # _ = plt.figure(figsize=(10,10))
 # _ = plt.plot(range(2,101), recall_list, 'k-')
 # _ = plt.grid()
 # _ = plt.xlabel('# Clusters', fontsize=14)
-# _ = plt.ylabel('F1 Score', fontsize=14)
-# _ = plt.title('F1 Cluster Analysis\n', fontsize=22)
+# _ = plt.ylabel('Recall Score', fontsize=14)
+# _ = plt.title('Recall Cluster Analysis\n', fontsize=22)
 # _ = plt.show()
-# plt.savefig('F1 Cluster Analysis')
+# plt.savefig('Recall Cluster Analysis')
 # 
-# Best K
-n_cluster = recall_list.index(max(recall_list))+2
-print(n_cluster, recall_list[n_cluster])
 
-# Plot K-means clusters
-kmeans = KMeans(n_clusters=n_cluster, random_state=42)
-kmeans.fit(df[['LATITUDE','LONGITUDE']].values)
-
-_ = plt.scatter(df['LATITUDE'], df['LONGITUDE'], alpha=0.4)
-_ = plt.scatter(kmeans.cluster_centers_[:,0], kmeans.cluster_centers_[:,1])
-
-# Create K-means feature set
-labels = pd.Series(kmeans.labels_)
-pre_X = pd.get_dummies(labels, sparse=True)
+# Create feature set
+print('Creating feature set...')
+borough_clusters = [borough+' CLUSTERS' for borough in boroughs]
+cluster_dummies = pd.get_dummies(df[borough_clusters].fillna(''), prefix='CLUSTER', sparse=True)
+pre_X = cluster_dummies.join(borough_dummies)
+print('Done.')
 
 # Split X and y
+print('Splitting data...')
 X = scipy.sparse.csr_matrix(pre_X)
 y = df['CASUALTIES?']
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+print('Done.')
 
-# Random Forest hyperparameter search
-params = {
-    'max_depth':[1,2,5,10,15],
-    'n_estimators':[10,30,100],
-    'class_weight': ['balanced'],
-    'max_features':[None],
-    'random_state': [42],
-    'n_jobs':[-1],
-    'verbose':[2]
-}
-
+# Random Forest grid search
 cv = GridSearchCV(estimator=RandomForestClassifier(), param_grid=params, scoring=make_scorer(recall_score), n_jobs=-1)
 cv.fit(X_train, y_train)
 
 cv_results = pd.DataFrame(cv.cv_results_)
-cv_results[['param_max_depth','param_n_estimators','mean_test_score','mean_fit_time']].sort_values(by='mean_test_score', ascending=False)
+print(cv_results[['param_max_depth','param_n_estimators','mean_test_score','mean_fit_time']].sort_values(by='mean_test_score', ascending=False))
 
 print(f'{cv.best_params_}\n{cv.best_score_}')
 
-rf_clf = RandomForestClassifier(max_depth=15, n_estimators=100, class_weight='balanced', max_features=None, random_state=42, n_jobs=-1)
+rf_clf = RandomForestClassifier(**cv.best_params_)
 rf_clf.fit(X_train, y_train)
 
 y_pred = rf_clf.predict(X_test)

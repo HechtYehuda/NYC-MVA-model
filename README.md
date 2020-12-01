@@ -11,7 +11,7 @@ The data contains geographical and borough information, along with date and time
 ### Model development
 
 #### Classifiers/Metrics
-In such a model, the ideal metric is 
+In such a model, the ideal metric is recall, owing to the imbalanced nature of the data and the desire to minimize false negatives--it is better to err on the side of caution than to assume that an accident will _not_ take place.
 
 #### Model 1: Clusters/Boroughs
 The first data examined was the geographical data. There was a significant amount of data that was either mislabeled or incomplete. I removed all accident data with incomplete or otherwise incorrect latitude and longitude data, i.e. all records whose latitude and longitude data placed them outside of the bounds of NYC. I then corrected all ZIP code data based on the latitudes and longitudes. This data served as the first iteration of model development, I ran a K-means cluster test using 2-100 clusters and a random forest classifier with an F1 score function; the best score came from 52 clusters. These 52 clusters, along with the borough data, served as the feature set for the first model.
