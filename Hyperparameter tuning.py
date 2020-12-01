@@ -68,8 +68,8 @@ for space, current_borough in zip(subplots, boroughs):
     plt.grid()
     plt.xlabel('# Clusters', fontsize=12)
     plt.ylabel('Recall Score', fontsize=12)
-    plt.title(current_borough, fontsize=14)
-    plt.xticks(range(2,21), rotation=45, ha='right')
+    plt.title('\n\n'+current_borough, fontsize=14)
+    plt.xticks(range(2,21), rotation=60, ha='right')
     max_k[current_borough] = {
                         'K':recall_list.index(max(recall_list))+2,
                         'Score': max(recall_list)
@@ -84,7 +84,7 @@ for i in max_k:
 print('Fitting K-means clusters...')
 k_clusters = []
 for i in max_k:
-    k_clusters.append(i['K'])
+    k_clusters.append(max_k[i]['K'])
 for n, borough in zip(k_clusters,boroughs):
     print(f'    Calculating {borough.title()} clusters...')
     
@@ -125,6 +125,7 @@ print('Done.')
 
 # Create feature set
 print('Creating feature set...')
+borough_dummies = pd.get_dummies(df['BOROUGH'], sparse=True)
 borough_clusters = [borough+' CLUSTERS' for borough in boroughs]
 cluster_dummies = pd.get_dummies(df[borough_clusters].fillna(''), prefix='CLUSTER', sparse=True)
 pre_X = cluster_dummies.join(borough_dummies)
@@ -143,7 +144,7 @@ cv = GridSearchCV(estimator=RandomForestClassifier(), param_grid=params, scoring
 cv.fit(X_train, y_train)
 
 cv_results = pd.DataFrame(cv.cv_results_)
-print(cv_results[['param_max_depth','param_n_estimators','mean_test_score','mean_fit_time']].sort_values(by='mean_test_score', ascending=False))
+print(cv_results[['param_max_depth','param_n_estimators','mean_train_score','mean_test_score','mean_fit_time']].sort_values(by='mean_test_score', ascending=False))
 
 print(f'{cv.best_params_}\n{cv.best_score_}')
 
@@ -151,4 +152,5 @@ rf_clf = RandomForestClassifier(**cv.best_params_)
 rf_clf.fit(X_train, y_train)
 
 y_pred = rf_clf.predict(X_test)
-recall_score(y_test, y_pred)
+print(cv.best_params_)
+print(recall_score(y_test, y_pred))
