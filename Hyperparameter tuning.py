@@ -78,7 +78,7 @@ for space, current_borough in zip(subplots, boroughs):
 plt.show()
 plt.savefig('K-Means tuning.png')
 for i in max_k:
-    print(f'{i}\n    {i.values()}')
+    print(f'{i}\n    {max_k[i]}')
 
 # Fit K-Means
 print('Fitting K-means clusters...')
