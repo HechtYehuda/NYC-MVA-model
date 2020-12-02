@@ -159,6 +159,17 @@ rf_test_recall = recall_score(y_test, y_test_pred)
 print(f'Train scores:\n    Logistic Regression Recall: {log_train_recall}\n    Random Forest Recall: {rf_train_recall}')
 print(f'Test scores:\n    Logistic Regression Recall: {log_test_recall}\n    Random Forest Recall: {rf_test_recall}')
 
+def fp_rate(y_test, y_pred):
+    tn, fp, fn, tp  = confusion_matrix(y_test, y_pred).ravel()
+    return fp / (fp + tn)
+    
+def fn_rate(y_test, y_pred):
+    tn, fp, fn, tp  = confusion_matrix(y_test, y_pred).ravel()
+    return fn / (tp + fn)
+
+print('False positive rate: ', fp_rate(y_test, y_test_pred) 
+print('False negative rate: ', fn_rate(y_test, y_test_pred))
+
 cm = confusion_matrix(y_test, y_test_pred)
 _ = sns.heatmap(cm)
 _ = plt.xlabel('True casualties')
