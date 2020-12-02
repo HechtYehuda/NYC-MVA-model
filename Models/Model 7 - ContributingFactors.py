@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import pickle
 import matplotlib.pyplot as plt
 import datetime as dt
 import seaborn as sns
@@ -30,15 +31,8 @@ df.loc[mask, 'CASUALTIES?'] = 1
 df.loc[df['TOTAL PEDESTRIAN CASUALTIES'] != 1, ['TOTAL PEDESTRIAN CASUALTIES','CASUALTIES?']].sample(5)
 
 # Random Forest hyperparameters
-rf_params = {
-    'class_weight':'balanced',
-    'max_depth':20,
-    'n_estimators':15,
-    'max_features':None,
-    'n_jobs':15,
-    'random_state':42,
-    'verbose':1
-}
+with open('../Predictor tools/rf_params.pickle', 'wb') as file:
+    rf_params = pickle.load(file)
 
 # Logistic Regression hyperparameters
 log_params = {
