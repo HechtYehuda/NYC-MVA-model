@@ -11,7 +11,7 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.metrics import f1_score, confusion_matrix, make_scorer
+from sklearn.metrics import recall_score, confusion_matrix, make_scorer
 
 # Import data
 print('Importing crash data...')
@@ -142,8 +142,8 @@ log_reg.fit(X_train, y_train)
 y_train_pred = log_reg.predict(X_train)
 y_test_pred = log_reg.predict(X_test)
 
-log_train_f1 = f1_score(y_train, y_train_pred)
-log_test_f1 = f1_score(y_test, y_test_pred)
+log_train_recall = recall_score(y_train, y_train_pred)
+log_test_recall = recall_score(y_test, y_test_pred)
 print('Done.')
 
 print('Creating random forest classifier model...') 
@@ -153,11 +153,11 @@ rf_clf.fit(X_train, y_train)
 y_train_pred = rf_clf.predict(X_train)
 y_test_pred = rf_clf.predict(X_test)
 
-rf_train_f1 = f1_score(y_train, y_train_pred)
-rf_test_f1 = f1_score(y_test, y_test_pred)
+rf_train_recall = recall_score(y_train, y_train_pred)
+rf_test_recall = recall_score(y_test, y_test_pred)
 
-print(f'Train scores:\n    Logistic Regression F1: {log_train_f1}\n    Random Forest F1: {rf_train_f1}')
-print(f'Test scores:\n    Logistic Regression F1: {log_test_f1}\n    Random Forest F1: {rf_test_f1}')
+print(f'Train scores:\n    Logistic Regression Recall: {log_train_recall}\n    Random Forest Recall: {rf_train_recall}')
+print(f'Test scores:\n    Logistic Regression Recall: {log_test_recall}\n    Random Forest Recall: {rf_test_recall}')
 
 cm = confusion_matrix(y_test, y_test_pred)
 _ = sns.heatmap(cm)
