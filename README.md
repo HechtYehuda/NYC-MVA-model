@@ -4,6 +4,9 @@ Between 2012 and 2020, there were close to 2 million motor vehicle accidents in 
 
 The data was collected a number of months ago from the [NYC OpenData](https://data.cityofnewyork.us/Public-Safety/Motor-Vehicle-Collisions-Crashes/h9gi-nx95) dataset. The dataset is constantly updated, and as such, the current data contains more accidents than the models trained here. 
 
+## Instructions
+All tools are stored in the _Predictor tools_ folder. The _Predictor_ program will prompt the user for relevant data and will present a prediction based on the features described below. The _Retrain model_ program will allow the user to update the model based on the most current data available on NYC OpenData. Please note that this will take several hours, owing to an API that requires single-item requests. I will look into multithreading (perhaps `ThreadPoolExecutor`) as an option for improving speed. 
+
 ## Model details
 ### Target variable
 The data contains geographical and borough information, along with date and time of each accident. A contributing factor was applied to each accident, as well as the vehicle types. The data set also contains the number of persons injured or killed; these are then broken down into pedestrians, cyclists, and motorists injured or killed. To develop a target, I combined the `NUMBER OF PEDESTRIANS INJURED`, `NUMBER OF PEDESTRIANS KILLED`, `NUMBER OF CYCLISTS INJURED`, and `NUMBER OF CYCLISTS KILLED`  into a single column called `TOTAL PEDESTRIAN CASUALTIES`. I then created the target based on the nonzero records contained in the `TOTAL PEDESTRIAN CASUALTIES` column, simply called `CASUALTIES?` and containing a 1 for all nonzero records, and a 0 for all others.
