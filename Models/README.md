@@ -8,7 +8,7 @@ Recall scores were used to calculate model accuracy, owing to the imbalanced nat
 | :---: | :--- | :---: | :---: | :---: | :---: |
 | 1 | K-means clusters <br/> Boroughs | 0.707050 | 0.602465 | 0.707783 | 0.601080 |
 | 2 | K-means clusters <br/> Boroughs <br/> Years <br/> Months <br/> Seasons | 0.637117 | 0.611720 | 0.639231 | 0.602192 |
-| 3 | K-means clusters <br/> Boroughs <br/> Years <br/> Months <br/> Seasons <br/> Hour of day <br/> Daytime <br/> Rush hour | 0.173862 | 0.178708 | 0.174438 | 0.175753 | 
+| 3 | K-means clusters <br/> Boroughs <br/> Years <br/> Months <br/> Seasons <br/> Hour of day <br/> Daytime <br/> Rush hour | 0.598633 | 0.600535 | 0.596506 | 0.588912 | 
 | 4 | K-means clusters <br/> Boroughs <br/> Years <br/> Months <br/> Seasons <br/> Hour of day <br/> Daytime <br/> Rush hour <br/> Day of week | 0.173933 |0.185982 | 0.174892 | 0.174815 |
 | 5 | K-means clusters <br/> Boroughs <br/> Years <br/> Months <br/> Seasons <br/> Hour of day <br/> Daytime <br/> Rush hour <br/> Day of week <br/> Street names | 0.196917 | 0.193533 | 0.193701 | 0.185183 |
 | 6 | K-means clusters <br/> Boroughs <br/> Years <br/> Months <br/> Seasons <br/> Hour of day <br/> Daytime <br/> Rush hour <br/> Day of week <br/> Street names <br/> Cross street names | 0.632376 | 0.682589 | 0.618424 | 0.629670 | 
