@@ -172,7 +172,7 @@ def fn_rate(y_test, y_pred):
 print('False positive rate: ', fp_rate(y_test, y_test_pred))
 print('False negative rate: ', fn_rate(y_test, y_test_pred))
 
-cm = confusion_matrix(y_test, y_test_pred, normalize=True)
+cm = confusion_matrix(y_test, y_test_pred, normalize='true')
 _ = sns.heatmap(cm)
 _ = plt.xlabel('True casualties')
 _ = plt.ylabel('Predicted casualties')
