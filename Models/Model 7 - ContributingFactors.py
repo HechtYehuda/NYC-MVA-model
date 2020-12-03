@@ -169,7 +169,7 @@ def fn_rate(y_test, y_pred):
     tn, fp, fn, tp  = confusion_matrix(y_test, y_pred).ravel()
     return fn / (tp + fn)
 
-print('False positive rate: ', fp_rate(y_test, y_test_pred) 
+print('False positive rate: ', fp_rate(y_test, y_test_pred))
 print('False negative rate: ', fn_rate(y_test, y_test_pred))
 
 cm = confusion_matrix(y_test, y_test_pred)
