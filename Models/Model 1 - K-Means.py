@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import pickle
 import matplotlib.pyplot as plt
 import seaborn as sns
 import datetime as dt
@@ -28,15 +29,9 @@ df.loc[df['TOTAL PEDESTRIAN CASUALTIES'] != 1, ['TOTAL PEDESTRIAN CASUALTIES','C
 print('Done.')
 
 # Random Forest hyperparameters
-print('Setting hyperparameters...')
-rf_params = {
-    'class_weight':'balanced',
-    'max_depth':15,
-    'n_estimators':10,
-    'max_features':None,
-    'n_jobs':-1,
-    'random_state':42
-}
+params_path = r'Predictor tools/rf_params.pickle'
+with open(params_path, 'rb') as file:
+    rf_params = pickle.load(file)
 
 # Logistic Regression hyperparameters
 log_params = {
@@ -47,11 +42,17 @@ log_params = {
 }
 
 
-# Fit K-Means
-print('Fitting K-means clusters...')
-counts = [7, 3, 4, 3, 5]
-boroughs = ['MANHATTAN','QUEENS','BROOKLYN','STATEN ISLAND','BRONX']
-for n, borough in zip(counts,boroughs):
+# Add K-means cluster features
+print('Adding K-means features...')
+params_path = r'Predictor tools/k_clusters.pickle'
+with open(params_path, 'rb') as file:
+    max_k = pickle.load(file)
+
+boroughs = ['MANHATTAN','BROOKLYN','STATEN ISLAND','QUEENS','BRONX']
+k_clusters = []
+for i in max_k:
+    k_clusters.append(max_k[i]['K'])
+for n, borough in zip(k_clusters,boroughs):
     print(f'    Calculating {borough.title()} clusters...')
     
     borough_accidents = df[df['BOROUGH'] == borough]
@@ -59,9 +60,7 @@ for n, borough in zip(counts,boroughs):
     kmeans.fit(borough_accidents[['LATITUDE','LONGITUDE']].values)
     
     df.loc[df['BOROUGH'] == borough, f'{borough} CLUSTERS'] = kmeans.labels_
-
 print('Done.')
-
 
 # Create dummies
 print('Creating feature set...')

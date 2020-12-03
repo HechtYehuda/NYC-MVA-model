@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import pickle
 import matplotlib.pyplot as plt
 import datetime as dt
 import seaborn as sns
@@ -11,7 +12,7 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.metrics import f1_score, confusion_matrix, make_scorer
+from sklearn.metrics import recall_score, confusion_matrix, make_scorer
 
 # Import data
 print('Importing crash data...')
@@ -30,15 +31,9 @@ df.loc[mask, 'CASUALTIES?'] = 1
 df.loc[df['TOTAL PEDESTRIAN CASUALTIES'] != 1, ['TOTAL PEDESTRIAN CASUALTIES','CASUALTIES?']].sample(5)
 
 # Random Forest hyperparameters
-rf_params = {
-    'class_weight':'balanced',
-    'max_depth':20,
-    'n_estimators':15,
-    'max_features':None,
-    'n_jobs':15,
-    'random_state':42,
-    'verbose':1
-}
+params_path = r'Predictor tools/rf_params.pickle'
+with open(params_path, 'rb') as file:
+    rf_params = pickle.load(file)
 
 # Logistic Regression hyperparameters
 log_params = {
@@ -46,12 +41,6 @@ log_params = {
     'max_iter':10_000,
     'tol':0.001,
     'n_jobs':-1
-}
-
-# KMeans hyperparameters
-kmeans_params = {
-    'n_clusters':52,
-    'random_state':42
 }
 
 # TF-IDF hyperparameters
@@ -62,18 +51,30 @@ count_params = {
 
 # Add K-means cluster features
 print('Adding K-means features...')
-clusters=52
-kmeans = KMeans(**kmeans_params)
-kmeans.fit(df[['LATITUDE','LONGITUDE']].values)
-df['CLUSTERS'] = kmeans.labels_
+params_path = r'Predictor tools/k_clusters.pickle'
+with open(params_path, 'rb') as file:
+    max_k = pickle.load(file)
+
+boroughs = ['MANHATTAN','BROOKLYN','STATEN ISLAND','QUEENS','BRONX']
+k_clusters = []
+for i in max_k:
+    k_clusters.append(max_k[i]['K'])
+for n, borough in zip(k_clusters,boroughs):
+    print(f'    Calculating {borough.title()} clusters...')
+    
+    borough_accidents = df[df['BOROUGH'] == borough]
+    kmeans = KMeans(n_clusters=n, random_state=42)
+    kmeans.fit(borough_accidents[['LATITUDE','LONGITUDE']].values)
+    
+    df.loc[df['BOROUGH'] == borough, f'{borough} CLUSTERS'] = kmeans.labels_
 print('Done.')
 
 # Add borough features
 print('Adding borough features...')
 borough_dummies = pd.get_dummies(df['BOROUGH'], sparse=True)
-cluster_dummies = pd.get_dummies(df['CLUSTERS'], prefix='CLUSTER', sparse=True)
+borough_clusters = [borough+' CLUSTERS' for borough in boroughs]
+cluster_dummies = pd.get_dummies(df[borough_clusters].fillna(''), prefix='CLUSTER', sparse=True)
 pre_X = cluster_dummies.join(borough_dummies)
-print('Done.')
 
 # Add year/month/season features
 print('Adding date/time features...')
@@ -137,8 +138,8 @@ log_reg.fit(X_train, y_train)
 y_train_pred = log_reg.predict(X_train)
 y_test_pred = log_reg.predict(X_test)
 
-log_train_f1 = f1_score(y_train, y_train_pred)
-log_test_f1 = f1_score(y_test, y_test_pred)
+log_train_recall = recall_score(y_train, y_train_pred)
+log_test_recall = recall_score(y_test, y_test_pred)
 print('Done.')
 
 print('Creating random forest classifier model...') 
@@ -148,11 +149,11 @@ rf_clf.fit(X_train, y_train)
 y_train_pred = rf_clf.predict(X_train)
 y_test_pred = rf_clf.predict(X_test)
 
-rf_train_f1 = f1_score(y_train, y_train_pred)
-rf_test_f1 = f1_score(y_test, y_test_pred)
+rf_train_recall = recall_score(y_train, y_train_pred)
+rf_test_recall = recall_score(y_test, y_test_pred)
 
-print(f'Train scores:\n    Logistic Regression F1: {log_train_f1}\n    Random Forest F1: {rf_train_f1}')
-print(f'Test scores:\n    Logistic Regression F1: {log_test_f1}\n    Random Forest F1: {rf_test_f1}')
+print(f'Train scores:\n    Logistic Regression Recall: {log_train_recall}\n    Random Forest Recall: {rf_train_recall}')
+print(f'Test scores:\n    Logistic Regression Recall: {log_test_recall}\n    Random Forest Recall: {rf_test_recall}')
 
 cm = confusion_matrix(y_test, y_test_pred, normalize='true')
 _ = sns.heatmap(cm)

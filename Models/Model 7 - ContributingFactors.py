@@ -31,7 +31,8 @@ df.loc[mask, 'CASUALTIES?'] = 1
 df.loc[df['TOTAL PEDESTRIAN CASUALTIES'] != 1, ['TOTAL PEDESTRIAN CASUALTIES','CASUALTIES?']].sample(5)
 
 # Random Forest hyperparameters
-with open('../Predictor tools/rf_params.pickle', 'wb') as file:
+params_path = r'Predictor tools/rf_params.pickle'
+with open(params_path, 'rb') as file:
     rf_params = pickle.load(file)
 
 # Logistic Regression hyperparameters
@@ -42,12 +43,6 @@ log_params = {
     'n_jobs':-1
 }
 
-# KMeans hyperparameters
-kmeans_params = {
-    'n_clusters':52,
-    'random_state':42
-}
-
 # TF-IDF hyperparameters
 count_params = {
     'min_df':30,
@@ -56,16 +51,29 @@ count_params = {
 
 # Add K-means cluster features
 print('Adding K-means features...')
-clusters=52
-kmeans = KMeans(**kmeans_params)
-kmeans.fit(df[['LATITUDE','LONGITUDE']].values)
-df['CLUSTERS'] = kmeans.labels_
+params_path = r'Predictor tools/k_clusters.pickle'
+with open(params_path, 'rb') as file:
+    max_k = pickle.load(file)
+
+boroughs = ['MANHATTAN','BROOKLYN','STATEN ISLAND','QUEENS','BRONX']
+k_clusters = []
+for i in max_k:
+    k_clusters.append(max_k[i]['K'])
+for n, borough in zip(k_clusters,boroughs):
+    print(f'    Calculating {borough.title()} clusters...')
+    
+    borough_accidents = df[df['BOROUGH'] == borough]
+    kmeans = KMeans(n_clusters=n, random_state=42)
+    kmeans.fit(borough_accidents[['LATITUDE','LONGITUDE']].values)
+    
+    df.loc[df['BOROUGH'] == borough, f'{borough} CLUSTERS'] = kmeans.labels_
 print('Done.')
 
 # Add borough features
 print('Adding borough features...')
 borough_dummies = pd.get_dummies(df['BOROUGH'], sparse=True)
-cluster_dummies = pd.get_dummies(df['CLUSTERS'], prefix='CLUSTER', sparse=True)
+borough_clusters = [borough+' CLUSTERS' for borough in boroughs]
+cluster_dummies = pd.get_dummies(df[borough_clusters].fillna(''), prefix='CLUSTER', sparse=True)
 pre_X = cluster_dummies.join(borough_dummies)
 print('Done.')
 
