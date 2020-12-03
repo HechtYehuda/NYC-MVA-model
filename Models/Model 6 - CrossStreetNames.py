@@ -18,7 +18,7 @@ from sklearn.metrics import recall_score, confusion_matrix, make_scorer
 print('Importing crash data...')
 data_path = r'data/clean_df.csv.gz'
 df = pd.read_csv(data_path)
-print('Done.')
+
 
 # Transform datetime variables
 df['CRASH DATE'] = pd.to_datetime(df['CRASH DATE'])
@@ -29,6 +29,7 @@ df['CASUALTIES?'] = 0
 mask = df['TOTAL PEDESTRIAN CASUALTIES'] != 0
 df.loc[mask, 'CASUALTIES?'] = 1
 df.loc[df['TOTAL PEDESTRIAN CASUALTIES'] != 1, ['TOTAL PEDESTRIAN CASUALTIES','CASUALTIES?']].sample(5)
+print('Done.')
 
 # Random Forest hyperparameters
 params_path = r'Predictor tools/rf_params.pickle'
