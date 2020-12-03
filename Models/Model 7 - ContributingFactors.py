@@ -104,7 +104,8 @@ df['STREET NAME IS NULL'] = df['ON STREET NAME'].isnull().astype('int')
 df['ON STREET NAME'] = df['ON STREET NAME'].fillna('')
 
 on_count = CountVectorizer(**count_params)
-on_count_df = pd.DataFrame.sparse.from_spmatrix(on_count.fit_transform(df['ON STREET NAME']))
+on_count_vectorized = on_count.fit_transform(df['ON STREET NAME'])
+on_count_df = pd.DataFrame.sparse.from_spmatrix(on_count_vectorized)
 on_count_pre = on_count_df.add_prefix('ON_')
 pre_X_dense = pre_X.join(on_count_pre).join(df['STREET NAME IS NULL'])
 pre_X = scipy.sparse.csr_matrix(pre_X)
@@ -116,7 +117,8 @@ df['CROSS STREET NAME IS NULL'] = df['CROSS STREET NAME'].isnull().astype('int')
 df['CROSS STREET NAME'] = df['CROSS STREET NAME'].fillna('')
 
 cross_count = CountVectorizer(**count_params)
-cross_count_df = pd.DataFrame.sparse.from_spmatrix(cross_count.fit_transform(df['CROSS STREET NAME']))
+cross_count_vectorized = cross_count.fit_transform(df['CROSS STREET NAME'])
+cross_count_df = pd.DataFrame.sparse.from_spmatrix(cross_count_vectorized)
 cross_count_pre = cross_count_df.add_prefix('CROSS_')
 off_dense = cross_count_pre.join(df['CROSS STREET NAME IS NULL'])
 off_sparse = scipy.sparse.csr_matrix(off_dense)
@@ -161,6 +163,19 @@ rf_test_recall = recall_score(y_test, y_test_pred)
 print(f'Train scores:\n    Logistic Regression Recall: {log_train_recall}\n    Random Forest Recall: {rf_train_recall}')
 print(f'Test scores:\n    Logistic Regression Recall: {log_test_recall}\n    Random Forest Recall: {rf_test_recall}')
 
+# Save tools
+print('Pickling tools...')
+with open(r'Predictor tools/on_street_vectorizer.pickle', 'wb') as file:
+    file = pickle.dump(on_count)
+    
+with open(r'Predictor tools/cross_street_vectorizer.pickle', 'wb') as file:
+    file = pickle.dump(cross_count)
+
+with open(r'Predictor tools/rf_classifier.pickle', 'wb') as file:
+    file = pickle.dump(rf_clf)
+print('Done.')
+
+# Results
 def fp_rate(y_test, y_pred):
     tn, fp, fn, tp  = confusion_matrix(y_test, y_pred).ravel()
     return fp / (fp + tn)
@@ -171,10 +186,10 @@ def fn_rate(y_test, y_pred):
 
 print('False positive rate: ', fp_rate(y_test, y_test_pred))
 print('False negative rate: ', fn_rate(y_test, y_test_pred))
-
 cm = confusion_matrix(y_test, y_test_pred, normalize='true')
 _ = sns.heatmap(cm)
 _ = plt.xlabel('True casualties')
 _ = plt.ylabel('Predicted casualties')
 
 _ = plt.show()
+_ = plt.savefig('Confusion matrix.png')
