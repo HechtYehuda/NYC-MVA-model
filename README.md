@@ -12,6 +12,7 @@ All tools are stored in the _Predictor tools_ folder. The _Predictor_ program wi
 The data contains geographical and borough information, along with date and time of each accident. A contributing factor was applied to each accident, as well as the vehicle types. The data set also contains the number of persons injured or killed; these are then broken down into pedestrians, cyclists, and motorists injured or killed. To develop a target, I combined the `NUMBER OF PEDESTRIANS INJURED`, `NUMBER OF PEDESTRIANS KILLED`, `NUMBER OF CYCLISTS INJURED`, and `NUMBER OF CYCLISTS KILLED`  into a single column called `TOTAL PEDESTRIAN CASUALTIES`. I then created the target based on the nonzero records contained in the `TOTAL PEDESTRIAN CASUALTIES` column, simply called `CASUALTIES?` and containing a 1 for all nonzero records, and a 0 for all others.
 
 ### Model development
+See more detail on the features in the _EDA_ file in the _Model prework_ folder.
 
 #### Classifiers/Metrics
 In such a model, the ideal metric is recall, owing to the imbalanced nature of the data and the desire to minimize false negatives--it is better to err on the side of caution than to assume that an accident will _not_ take place.
@@ -22,3 +23,6 @@ The first data examined was the geographical data. There was a significant amoun
 
 #### Feature set 2: Year/Month/Season
 While a specific _pattern_ is not easily detectable among the date-related data, it is apparent that these are nonetheless relevant features. Intuition dictates examination of such--for example, it is highly likely that in 2020 there are fewer cases of pedestrian-related accidents, owing to reduced foot traffic caused by COVID restrictions. Similarly, it stands to reason that seasons may be a relevant feature--camps, not schools, are open in the summer, reducing bus traffic and children in the streets, and winter is well-known as the tourist season in NYC. A more granular examination is the month, but trends should follow similar patterns based on rationale.
+
+#### Feature set 3: Hour/Daytime/Rush hour
+Depending on the day, more accidents occur during certain hours than others. The raw hour feature is an obvious consideration; additional time features included are daytime--each day is calculated using the `astral` module--and whether or not the accident took place during rush hour, calculated as between 5-10 AM and 4-8 PM.
