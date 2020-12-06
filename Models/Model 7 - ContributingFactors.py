@@ -168,26 +168,29 @@ print('Pickling tools...')
 with open(r'Predictor tools/on_street_vectorizer.pickle', 'wb') as file:
     pickle.dump(on_count, file)
 with open(r'Predictor tools/on_street_vectorizer.pickle', 'rb') as file:
-    if file == on_count:
-        print('ON STREET vectorizer pickled.')
-    else:
-        print('Pickling failed.')
+    test = pickle.load(file)
+if test == on_count:
+    print('ON STREET vectorizer pickled.')
+else:
+    print('Pickling failed.')
     
 with open(r'Predictor tools/cross_street_vectorizer.pickle', 'wb') as file:
     pickle.dump(cross_count, file)
 with open(r'Predictor tools/cross_street_vectorizer.pickle', 'rb') as file:
-    if file == on_count:
-        print('CROSS STREET vectorizer pickled.')
-    else:
-        print('Pickling failed.')
+    test = pickle.load(file)
+if test == on_count:
+    print('CROSS STREET vectorizer pickled.')
+else:
+    print('Pickling failed.')
 
 with open(r'Predictor tools/rf_classifier.pickle', 'wb') as file:
     pickle.dump(rf_clf, file)
 with open(r'Predictor tools/cross_street_vectorizer.pickle', 'rb') as file:
-    if file == rf_clf:
-        print('Random Forest classifier pickled.')
-    else:
-        print('Pickling failed.')
+    test = pickle.load(file)
+if test == rf_clf:
+    print('Random Forest classifier pickled.')
+else:
+    print('Pickling failed.')
 
 # Results
 def fp_rate(y_test, y_pred):

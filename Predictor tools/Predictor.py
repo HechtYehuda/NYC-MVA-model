@@ -10,6 +10,10 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics import recall_score
 from astral.sun import sun
 
+# API key
+with open('api_key.txt', 'r') as file:
+    key = file.read()
+print(key)
 ### New data input
 df = pd.DataFrame()
 df.loc[0,'CRASH DATE'] = input('Date (YYYY-MM-DD):\n')
