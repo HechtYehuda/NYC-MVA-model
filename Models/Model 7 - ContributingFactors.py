@@ -16,7 +16,7 @@ from sklearn.metrics import recall_score, confusion_matrix, make_scorer
 
 # Import data
 print('Importing crash data...')
-data_path = r'data/clean_df.csv.gz'
+data_path = 'data/clean_df.csv.gz'
 df = pd.read_csv(data_path)
 print('Done.')
 
@@ -167,7 +167,7 @@ print(f'Test scores:\n    Logistic Regression Recall: {log_test_recall}\n    Ran
 print('Pickling tools...')
 with open(r'Predictor tools/on_street_vectorizer.pickle', 'wb') as file:
     pickle.dump(on_count, file)
-with open r'Predictor tools/on_street_vectorizer.pickle', 'rb') as file:
+with open(r'Predictor tools/on_street_vectorizer.pickle', 'rb') as file:
     if file == on_count:
         print('ON STREET vectorizer pickled.')
     else:
@@ -175,7 +175,7 @@ with open r'Predictor tools/on_street_vectorizer.pickle', 'rb') as file:
     
 with open(r'Predictor tools/cross_street_vectorizer.pickle', 'wb') as file:
     pickle.dump(cross_count, file)
-with open r'Predictor tools/cross_street_vectorizer.pickle', 'rb') as file:
+with open(r'Predictor tools/cross_street_vectorizer.pickle', 'rb') as file:
     if file == on_count:
         print('CROSS STREET vectorizer pickled.')
     else:
@@ -183,7 +183,7 @@ with open r'Predictor tools/cross_street_vectorizer.pickle', 'rb') as file:
 
 with open(r'Predictor tools/rf_classifier.pickle', 'wb') as file:
     pickle.dump(rf_clf, file)
-with open r'Predictor tools/cross_street_vectorizer.pickle', 'rb') as file:
+with open(r'Predictor tools/cross_street_vectorizer.pickle', 'rb') as file:
     if file == rf_clf:
         print('Random Forest classifier pickled.')
     else:
