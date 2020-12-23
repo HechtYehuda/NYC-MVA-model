@@ -21,7 +21,7 @@ Each model was examined with a logistic regression and random forest classifier.
 #### Feature set 1: Clusters/Boroughs
 The first data examined was the geographical data. There was a significant amount of data that was either mislabeled or incomplete. I removed all accident data with incomplete or otherwise incorrect latitude and longitude data, i.e. all records whose latitude and longitude data placed them outside of the bounds of NYC. I then corrected all ZIP code data based on the latitudes and longitudes. This data served as the first iteration of model development, Because each borough has different rates of accident and different "culture of driving," so to speak, I ran a K-means cluster test using 2-20 on each borough and implemented the cluster count with the highest recall score for each borough:
 
-![K-means hyperparameters](Model prework/K-means borough analysis.png "K-means")
+![K-means hyperparameters](Model%20prework/K-Means%20borough%20analysis.png)
 
 See _Hyperparameter tuning.py_ for details. The cluster counts are saved in the _Predictor tools_ folder as a pickled dictionary. These cluster counts, combined with a dummy set of the borough feature, defined the first model.
 
