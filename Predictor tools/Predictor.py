@@ -9,6 +9,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics import recall_score
 from astral.sun import sun
+import requests
 
 # API key
 with open('api_key.txt', 'r') as file:
@@ -24,6 +25,28 @@ df.loc[0,'CROSS STREET NAME'] = input('Cross street:\n')
 print(df)
 
 # Feature extraction
+
+# Street and cluster extraction
+street_1 = df['ON STREET NAME'].str.replace(' ','%20')
+street_2 = df['CROSS STREET NAME'].str.replace(' ','%20')
+coordinates = {
+               'manhattan':[40.7831, -73.9712],
+               'brooklyn':[40.6782, -73.9442],
+               'staten island':[40.5795, -74.1502],
+               'queens':[40.7282, -73.7949],
+               'bronx':[40.8448 ,-73.8648]
+              }
+
+relevant_coordinates = []
+while len(relevant_coordinates) == 0:
+    try:
+        relevant_coordinates = coordinates[df.loc[0,'BOROUGH'].lower()]
+    except:
+        df.loc[0,'BOROUGH'] = input('Please check borough name and try again.\n')
+
+street_coords = requests.get(f'https://api.mapbox.com/geocoding/v5/mapbox.places/{street_1}%20and%20{street_2}.json?types=address&proximity={relevant_coordinates[0]},{relevant_coordinates[1]}&access_token={key}')
+print(street_coords)
+
 df['CRASH DATE'] = pd.to_datetime(df['CRASH DATE'])
 df['CRASH TIME'] = pd.to_datetime(df['CRASH TIME'])
 df['YEAR'] = df['CRASH DATE'].dt.year
