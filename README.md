@@ -16,7 +16,18 @@ See more detail on the features in the _EDA_ file in the _Model prework_ folder.
 
 #### Classifiers/Metrics
 In such a model, the ideal metric is recall, owing to the imbalanced nature of the data and the desire to minimize false negatives--it is better to err on the side of caution than to assume that an accident will _not_ take place.
-Each model was examined with a logistic regression and random forest classifier. Hyperparameter tuning was run on the random forest classifier. See results in the _Hyperparameter tuning_ notebook; a dict of the best params as been pickled in the _Predictor tools_ folder.
+Each feature set was examined with a Logistic Regression and Random Forest Classifier. Bayesian hyperparameter tuning was conducted on the Random Forest Classifier using Feature Set 1 below and the `scikit-optimize` [library](https://scikit-optimize.github.io/stable/); see the _Hyperparamter tuning_ notebook in the _Model prework_ folder for details. The following table presents which hyperparameters were tuned:
+
+| Hyperparameter | Levels |
+| :--- | :---: |
+| **Criterion** | Gini, entropy |
+| **Max depth** | Integers 0-50 |
+| **Min samples leaf** | Integers 1-10 |
+| **N estimators** | Integers 1-100 |
+| **Max features** | "None" and integers 1-10 |
+| **Min impurity decrease** | 0, 0.05, 0.1, 0.15, 0.2, 0.25 |
+
+To conduct the hyperparameter tuning, an F1 score was used in order to penalize false positives as well, thus preventing a false optimization of hyperparameters through maximization of recall at the expense of precision.
 
 #### Feature set 1: Clusters/Boroughs
 The first data examined was the geographical data. There was a significant amount of data that was either mislabeled or incomplete. I removed all accident data with incomplete or otherwise incorrect latitude and longitude data, i.e. all records whose latitude and longitude data placed them outside of the bounds of NYC. I then corrected all ZIP code data based on the latitudes and longitudes. This data served as the first iteration of model development, Because each borough has different rates of accident and different "culture of driving," so to speak, I ran a K-means cluster test using 2-20 on each borough and implemented the cluster count with the highest recall score for each borough:
@@ -29,4 +40,8 @@ See _Hyperparameter tuning.py_ for details. The cluster counts are saved in the 
 While a specific _pattern_ is not easily detectable among the date-related data, it is apparent that these are nonetheless relevant features. Intuition dictates examination of such--for example, it is highly likely that in 2020 there are fewer cases of pedestrian-related accidents, owing to reduced foot traffic caused by COVID restrictions. Similarly, it stands to reason that seasons may be a relevant feature--camps, not schools, are open in the summer, reducing bus traffic and children in the streets, and winter is well-known as the tourist season in NYC. A more granular examination is the month, but trends should follow similar patterns based on rationale.
 
 #### Feature set 3: Hour/Daytime/Rush hour
-Depending on the day, more accidents occur during certain hours than others. The raw hour feature is an obvious consideration; additional time features included are daytime--each day is calculated using the `astral` module--and whether or not the accident took place during rush hour, calculated as between 5-10 AM and 4-8 PM.
+Depending on the day, more accidents occur during certain hours than others:
+
+![Weekday by hour](Image%20resources/Weekdays.png)
+
+The raw hour feature is an obvious consideration; additional time features included are daytime--each day is calculated using the `astral` module--and whether or not the accident took place during rush hour, calculated as between 5-10 AM and 4-8 PM.
