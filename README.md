@@ -66,13 +66,9 @@ While the street is of vital importance when predicting accident occurrence, of 
 #### Feature set 7: Contributing factors
 Only certain types of accidents are preventable with police presence. For example, an accident caused by vehicle malfunction is not preventable. Because there is no way to prevent such an accident, we have no need to try to predict such an accident.
 
-#### Feature comparison
+## Feature comparison
 The following graph presents the recall scores for each model, based on Logistic Regression and the Random Forest Classifier.
 
 
-#### Future improvements
+## Future improvements
 Weather plays an important role in driving. I would like to join a weather dataset to the current data with generalized weather features such as can be input by a user (e.g. “sunny,” “cloudy,” “raining,” “snowing,” “foggy,” etc.) I would like to conduct mitigation operations on the data to correct for the imbalance, to try to improve the score. Because there are many highways that both muddle the clustering and damage the predictive quality of the data set (because there are few, if any, pedestrian casualties on highways), I would like to remove the highway accidents from the data during the cleaning process. This is not a straightforward process; there are highways, such as the FDR Drive or the Harlem River Drive, whose name shares commonalities with local roads; there are local roads, such as Kings Highway or Eastern Parkway, whose names share commonalities with highways. I would like to compile a list of NYC highway names and remove data containing those names. 
-
-#### Feature set 6: Cross street names
-
-#### Feature set 7:
