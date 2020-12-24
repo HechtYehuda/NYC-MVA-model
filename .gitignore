@@ -2,4 +2,3 @@
 *.csv.gz
 .ipynb_checkpoints/
 api_key.txt
-Image resources/
