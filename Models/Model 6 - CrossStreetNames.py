@@ -85,7 +85,13 @@ df['MONTH'] = df['CRASH DATE'].dt.month
 year_dummies = pd.get_dummies(df['YEAR'], sparse=True, prefix='YEAR')
 month_dummies = pd.get_dummies(df['MONTH'], sparse=True)
 season_dummies = pd.get_dummies(df['SEASON'], sparse=True)
+month_year_dummies = pd.get_dummies(df['YEAR-MONTH'], sparse=True)
 
+pre_X = pre_X.join(year_dummies).join(season_dummies).join(month_dummies).join(month_year_dummies)
+print('Done.')
+
+# Add hour/daytime features
+print('Adding time features...')
 df['HOUR'] = df['CRASH TIME'].dt.hour
 hour_dummies = pd.get_dummies(df['HOUR'], sparse=True, prefix='HOUR')
 
@@ -107,7 +113,7 @@ on_count = CountVectorizer(**count_params)
 on_count_df = pd.DataFrame.sparse.from_spmatrix(on_count.fit_transform(df['ON STREET NAME']))
 on_count_pre = on_count_df.add_prefix('ON_')
 pre_X_dense = pre_X.join(on_count_pre).join(df['STREET NAME IS NULL'])
-pre_X = scipy.sparse.csr_matrix(pre_X)
+pre_X = scipy.sparse.coo_matrix(pre_X)
 print('Done.')
 
 # Add off street name features
@@ -119,13 +125,13 @@ cross_count = CountVectorizer(**count_params)
 cross_count_df = pd.DataFrame.sparse.from_spmatrix(cross_count.fit_transform(df['CROSS STREET NAME']))
 cross_count_pre = cross_count_df.add_prefix('CROSS_')
 off_dense = cross_count_pre.join(df['CROSS STREET NAME IS NULL'])
-off_sparse = scipy.sparse.csr_matrix(off_dense)
+off_sparse = scipy.sparse.coo_matrix(off_dense)
 pre_X = scipy.sparse.hstack([pre_X, off_sparse])
 print('Done.')
 
 # Train-test split
 print('Splitting data...')
-X = scipy.sparse.csr_matrix(pre_X)
+X = scipy.sparse.coo_matrix(pre_X)
 y = df['CASUALTIES?']
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)

@@ -80,7 +80,13 @@ df['MONTH'] = df['CRASH DATE'].dt.month
 year_dummies = pd.get_dummies(df['YEAR'], sparse=True, prefix='YEAR')
 month_dummies = pd.get_dummies(df['MONTH'], sparse=True)
 season_dummies = pd.get_dummies(df['SEASON'], sparse=True)
+month_year_dummies = pd.get_dummies(df['YEAR-MONTH'], sparse=True)
 
+pre_X = pre_X.join(year_dummies).join(season_dummies).join(month_dummies).join(month_year_dummies)
+print('Done.')
+
+# Add hour/daytime features
+print('Adding time features...')
 df['HOUR'] = df['CRASH TIME'].dt.hour
 hour_dummies = pd.get_dummies(df['HOUR'], sparse=True, prefix='HOUR')
 

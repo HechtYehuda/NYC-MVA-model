@@ -85,7 +85,13 @@ df['MONTH'] = df['CRASH DATE'].dt.month
 year_dummies = pd.get_dummies(df['YEAR'], sparse=True, prefix='YEAR')
 month_dummies = pd.get_dummies(df['MONTH'], sparse=True)
 season_dummies = pd.get_dummies(df['SEASON'], sparse=True)
+month_year_dummies = pd.get_dummies(df['YEAR-MONTH'], sparse=True)
 
+pre_X = pre_X.join(year_dummies).join(season_dummies).join(month_dummies).join(month_year_dummies)
+print('Done.')
+
+# Add hour/daytime features
+print('Adding time features...')
 df['HOUR'] = df['CRASH TIME'].dt.hour
 hour_dummies = pd.get_dummies(df['HOUR'], sparse=True, prefix='HOUR')
 
@@ -143,22 +149,22 @@ print('Creating logistic regression model...')
 log_reg = LogisticRegression(**log_params)
 log_reg.fit(X_train, y_train)
 
-y_train_pred = log_reg.predict(X_train)
-y_test_pred = log_reg.predict(X_test)
+log_train_pred = log_reg.predict(X_train)
+log_test_pred = log_reg.predict(X_test)
 
-log_train_recall = recall_score(y_train, y_train_pred)
-log_test_recall = recall_score(y_test, y_test_pred)
+log_train_recall = recall_score(y_train, log_train_pred)
+log_test_recall = recall_score(y_test, log_test_pred)
 print('Done.')
 
 print('Creating random forest classifier model...') 
 rf_clf = RandomForestClassifier(**rf_params)
 rf_clf.fit(X_train, y_train)
 
-y_train_pred = rf_clf.predict(X_train)
-y_test_pred = rf_clf.predict(X_test)
+rf_train_pred = rf_clf.predict(X_train)
+rf_test_pred = rf_clf.predict(X_test)
 
-rf_train_recall = recall_score(y_train, y_train_pred)
-rf_test_recall = recall_score(y_test, y_test_pred)
+rf_train_recall = recall_score(y_train, rf_train_pred)
+rf_test_recall = recall_score(y_test, rf_test_pred)
 
 print(f'Train scores:\n    Logistic Regression Recall: {log_train_recall}\n    Random Forest Recall: {rf_train_recall}')
 print(f'Test scores:\n    Logistic Regression Recall: {log_test_recall}\n    Random Forest Recall: {rf_test_recall}')
@@ -201,9 +207,11 @@ def fn_rate(y_test, y_pred):
     tn, fp, fn, tp  = confusion_matrix(y_test, y_pred).ravel()
     return fn / (tp + fn)
 
-print('False positive rate: ', fp_rate(y_test, y_test_pred))
-print('False negative rate: ', fn_rate(y_test, y_test_pred))
-cm = confusion_matrix(y_test, y_test_pred, normalize='true')
+print('Logistic regression false positive rate: ', fp_rate(y_test, log_test_pred))
+print('False negative rate: ', fn_rate(y_test, log_test_pred))
+print('Random forest false positive rate: ', fp_rate(y_test, rf_test_pred))
+print('False negative rate: ', fn_rate(y_test, rf_test_pred))
+cm = confusion_matrix(y_test, rf_test_pred, normalize='true')
 _ = sns.heatmap(cm)
 _ = plt.xlabel('True casualties')
 _ = plt.ylabel('Predicted casualties')
