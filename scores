@@ -1,0 +1,47 @@
+Model 1
+Train scores:
+    Logistic Regression Recall: 0.6162883664204892
+    Random Forest Recall: 0.6435124330916728
+Test scores:
+    Logistic Regression Recall: 0.618240542355537
+    Random Forest Recall: 0.6451664481468453
+Model 2
+Train scores:
+    Logistic Regression Recall: 0.6264516566163019
+    Random Forest Recall: 0.6166271427603496
+Test scores:
+    Logistic Regression Recall: 0.6200313389402322
+    Random Forest Recall: 0.534169038406191
+Train scores:
+    Logistic Regression Recall: 0.6098922691239244
+    Random Forest Recall: 0.6562504234704248
+Model 3
+Test scores:
+    Logistic Regression Recall: 0.6051933100956157
+    Random Forest Recall: 0.40945284768635476
+Model 4
+Train scores:
+    Logistic Regression Recall: 0.6097432075343858
+    Random Forest Recall: 0.6551392370756827
+Test scores:
+    Logistic Regression Recall: 0.6044897828659141
+    Random Forest Recall: 0.3825908989159285
+Model 5
+Train scores:
+    Logistic Regression Recall: 0.6796290756805264
+    Random Forest Recall: 0.7160144671362141
+Test scores:
+    Logistic Regression Recall: 0.6651649746192894
+    Random Forest Recall: 0.6779505076142132
+Model 6
+Train scores:
+    Logistic Regression Recall: 0.6406531607832509
+    Random Forest Recall: 0.590866589877363
+Test scores:
+    Logistic Regression Recall: 0.6207028876594928
+    Random Forest Recall: 0.5542515429631287
+Model 7
+Train scores:
+    Logistic Regression F1: 0.6892336879192357
+Test scores:
+    Logistic Regression F1: 0.6746186562629912

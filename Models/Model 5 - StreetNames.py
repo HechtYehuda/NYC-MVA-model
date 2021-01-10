@@ -110,6 +110,8 @@ count_pre = count_df.add_prefix('ON')
 pre_X = pre_X.join(count_pre).join(df['STREET NAME IS NULL'])
 print('Done.')
 
+print('Data types:\n',set(pre_X.sample().dtypes))
+
 # Train-test split
 print('Splitting data...')
 X = scipy.sparse.csc_matrix(pre_X)
