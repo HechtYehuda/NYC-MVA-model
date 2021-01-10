@@ -12,10 +12,10 @@ Train scores:
 Test scores:
     Logistic Regression Recall: 0.6200313389402322
     Random Forest Recall: 0.534169038406191
+Model 3
 Train scores:
     Logistic Regression Recall: 0.6098922691239244
     Random Forest Recall: 0.6562504234704248
-Model 3
 Test scores:
     Logistic Regression Recall: 0.6051933100956157
     Random Forest Recall: 0.40945284768635476

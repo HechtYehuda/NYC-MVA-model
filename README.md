@@ -12,7 +12,21 @@ All tools are stored in the _Predictor tools_ folder. The _Predictor_ program wi
 The data contains geographical and borough information, along with date and time of each accident. A contributing factor was applied to each accident, as well as the vehicle types. The data set also contains the number of persons injured or killed; these are then broken down into pedestrians, cyclists, and motorists injured or killed. To develop a target, I combined the `NUMBER OF PEDESTRIANS INJURED`, `NUMBER OF PEDESTRIANS KILLED`, `NUMBER OF CYCLISTS INJURED`, and `NUMBER OF CYCLISTS KILLED`  into a single column called `TOTAL PEDESTRIAN CASUALTIES`. I then created the target based on the nonzero records contained in the `TOTAL PEDESTRIAN CASUALTIES` column, simply called `CASUALTIES?` and containing a 1 for all nonzero records, and a 0 for all others.
 
 ### Model development
-See more detail on the features in the _EDA_ file in the _Model prework_ folder.
+See more detail on the features in the _EDA_ file in the _Model prework_ folder. The recommended model is a Logistic Regression model, utilizing the following data:
+* Boroughs
+* Location clusters
+* Year
+* Month
+* Season
+* Hour
+* Daytime/nighttime
+* Rush hour
+* Day of the week
+* Street name
+* Street type (avenue, road, etc.)
+* Cross street name
+* Cross street type
+* Contributing factors (DUI, distracted driver, etc.)
 
 #### Classifiers/Metrics
 In such a model, the ideal metric is recall, owing to the imbalanced nature of the data and the desire to minimize false negatives--it is better to err on the side of caution than to assume that an accident will _not_ take place.
@@ -28,6 +42,10 @@ Each feature set was examined with a Logistic Regression and Random Forest Class
 | **Min impurity decrease** | 0, 0.05, 0.1, 0.15, 0.2, 0.25 |
 
 To conduct the hyperparameter tuning, an F1 score was used in order to penalize false positives as well, thus preventing a false optimization of hyperparameters through maximization of recall at the expense of precision.
+
+The following is a confusion matrix of the final linear regression model:
+![Confusion matrix](Image\%20resources/Confusion\%20matrix.png)
+The model better predicts no-casualty than casualty. This is possibly due to the data being so imbalanced.
 
 #### Feature set 1: Clusters/Boroughs
 The first data examined was the geographical data. There was a significant amount of data that was either mislabeled or incomplete. I removed all accident data with incomplete or otherwise incorrect latitude and longitude data, i.e. all records whose latitude and longitude data placed them outside of the bounds of NYC. I then corrected all ZIP code data based on the latitudes and longitudes. This data served as the first iteration of model development, Because each borough has different rates of accident and different "culture of driving," so to speak, I ran a K-means cluster test using 2-30 clusters on each borough and implemented the cluster count with the highest F1 score for each borough:
