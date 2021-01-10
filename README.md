@@ -4,9 +4,6 @@ Between 2012 and 2020, there were close to 2 million motor vehicle accidents in 
 
 The data was collected a number of months ago from the [NYC OpenData](https://data.cityofnewyork.us/Public-Safety/Motor-Vehicle-Collisions-Crashes/h9gi-nx95) dataset. The dataset is constantly updated, and as such, the current data contains more accidents than the models trained here. 
 
-## Instructions
-All tools are stored in the _Predictor tools_ folder. The _Predictor_ program will prompt the user for relevant data and will present a prediction based on the features described below. The _Retrain model_ program will allow the user to update the model based on the most current data available on NYC OpenData. Please note that this will take several hours, owing to an API that requires single-item requests. I will look into multithreading (perhaps `ThreadPoolExecutor`) as an option for improving speed. 
-
 ## Model details
 ### Target variable
 The data contains geographical and borough information, along with date and time of each accident. A contributing factor was applied to each accident, as well as the vehicle types. The data set also contains the number of persons injured or killed; these are then broken down into pedestrians, cyclists, and motorists injured or killed. To develop a target, I combined the `NUMBER OF PEDESTRIANS INJURED`, `NUMBER OF PEDESTRIANS KILLED`, `NUMBER OF CYCLISTS INJURED`, and `NUMBER OF CYCLISTS KILLED`  into a single column called `TOTAL PEDESTRIAN CASUALTIES`. I then created the target based on the nonzero records contained in the `TOTAL PEDESTRIAN CASUALTIES` column, simply called `CASUALTIES?` and containing a 1 for all nonzero records, and a 0 for all others.
@@ -45,7 +42,7 @@ To conduct the hyperparameter tuning, an F1 score was used in order to penalize 
 
 The following is a confusion matrix of the final linear regression model:
 ![Confusion matrix](Image\%20resources/Confusion\%20matrix.png)
-The model better predicts no-casualty than casualty. This is possibly due to the data being so imbalanced.
+The model better predicts no-casualties than casualties. This is possibly due to the data being so imbalanced.
 
 #### Feature set 1: Clusters/Boroughs
 The first data examined was the geographical data. There was a significant amount of data that was either mislabeled or incomplete. I removed all accident data with incomplete or otherwise incorrect latitude and longitude data, i.e. all records whose latitude and longitude data placed them outside of the bounds of NYC. I then corrected all ZIP code data based on the latitudes and longitudes. This data served as the first iteration of model development, Because each borough has different rates of accident and different "culture of driving," so to speak, I ran a K-means cluster test using 2-30 clusters on each borough and implemented the cluster count with the highest F1 score for each borough:
