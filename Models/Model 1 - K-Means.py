@@ -102,9 +102,8 @@ print(f'Test scores:\n    Logistic Regression Recall: {log_test_recall}\n    Ran
 
 cm = confusion_matrix(y_test, y_test_pred, normalize='true')
 
-_ = sns.heatmap(cm)
-_ = plt.xlabel('True casualties')
-_ = plt.ylabel('Predicted casualties')
+sns.heatmap(cm)
+plt.xlabel('True casualties')
+plt.ylabel('Predicted casualties')
 
-_ = plt.show()
-
+plt.savefig('Image resources/Model 1 confusion matrix.png')

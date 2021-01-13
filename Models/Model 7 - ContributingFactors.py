@@ -211,10 +211,11 @@ print('Logistic regression false positive rate: ', fp_rate(y_test, log_test_pred
 print('False negative rate: ', fn_rate(y_test, log_test_pred))
 print('Random forest false positive rate: ', fp_rate(y_test, rf_test_pred))
 print('False negative rate: ', fn_rate(y_test, rf_test_pred))
+
 cm = confusion_matrix(y_test, rf_test_pred, normalize='true')
+
 sns.heatmap(cm)
 plt.xlabel('True casualties')
 plt.ylabel('Predicted casualties')
 
-plt.savefig('Image resources/Confusion matrix.png')
-plt.show()
+plt.savefig('Image resources/Model 7 confusion matrix.png')
