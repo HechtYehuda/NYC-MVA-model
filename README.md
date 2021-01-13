@@ -84,7 +84,7 @@ Only certain types of accidents are preventable with police presence. For exampl
 
 ## Feature comparison
 The following graph presents the recall scores for each model, based on Logistic Regression and the Random Forest Classifier. There is a demonstrated inconsistency in the random forest recall score, making it unreliable for retraining with future data. The false negative rate for the logistic regression model is 0.32538, and the false positive rate is 0.35173. These scores are valuable in considering the advice of the model; employment of this model should consider both the false negative rate (the rate at which the model was wrong when it predicted an accident with pedestrians would not occur) as well as the prediction probability when allocating city resources.
-![Scores](Image\%20resources/Scores.png)
+![Scores](Image\%20resources/Scores.svg)
 
 
 ## Future improvements
