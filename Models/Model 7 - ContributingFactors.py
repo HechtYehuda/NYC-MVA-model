@@ -218,4 +218,4 @@ sns.heatmap(cm)
 plt.xlabel('True casualties')
 plt.ylabel('Predicted casualties')
 
-plt.savefig('Image resources/Model 7 confusion matrix.png')
+plt.savefig('Image resources/Model 7 confusion matrix.svg')
