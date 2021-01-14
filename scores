@@ -281,3 +281,109 @@ Done.
 Adding street name features...
 Done.
 Adding cross street name features...
+Done.
+Splitting data...
+Done.
+Creating logistic regression model...
+Done.
+Creating random forest classifier model...
+building tree 1 of 27
+building tree 2 of 27
+building tree 3 of 27
+building tree 4 of 27
+building tree 5 of 27
+building tree 6 of 27
+building tree 7 of 27
+building tree 8 of 27
+building tree 9 of 27
+building tree 10 of 27
+building tree 11 of 27
+building tree 12 of 27
+building tree 13 of 27
+building tree 14 of 27
+building tree 15 of 27
+building tree 16 of 27
+building tree 17 of 27
+building tree 18 of 27
+building tree 19 of 27
+building tree 20 of 27
+building tree 21 of 27
+building tree 22 of 27
+building tree 23 of 27
+building tree 24 of 27
+building tree 25 of 27
+building tree 26 of 27
+building tree 27 of 27
+Train scores:
+    Logistic Regression Recall: 0.640788671319195
+    Random Forest Recall: 0.590866589877363
+Test scores:
+    Logistic Regression Recall: 0.6206709091490519
+    Random Forest Recall: 0.5542515429631287
+Importing crash data...
+Done.
+Adding K-means features...
+    Calculating Manhattan clusters...
+    Calculating Brooklyn clusters...
+    Calculating Staten Island clusters...
+    Calculating Queens clusters...
+    Calculating Bronx clusters...
+Done.
+Adding borough features...
+Done.
+Adding date/time features...
+Done.
+Adding time features...
+Done.
+Adding weekday features...
+Done.
+Adding street name features...
+Done.
+Adding cross street name features...
+Done.
+Adding contributing factors...
+Done.
+Creating logistic regression model...
+Done.
+Creating random forest classifier model...
+building tree 1 of 27
+building tree 2 of 27
+building tree 3 of 27
+building tree 4 of 27
+building tree 5 of 27
+building tree 6 of 27
+building tree 7 of 27
+building tree 8 of 27
+building tree 9 of 27
+building tree 10 of 27
+building tree 11 of 27
+building tree 12 of 27
+building tree 13 of 27
+building tree 14 of 27
+building tree 15 of 27
+building tree 16 of 27
+building tree 17 of 27
+building tree 18 of 27
+building tree 19 of 27
+building tree 20 of 27
+building tree 21 of 27
+building tree 22 of 27
+building tree 23 of 27
+building tree 24 of 27
+building tree 25 of 27
+building tree 26 of 27
+building tree 27 of 27
+Train scores:
+    Logistic Regression Recall: 0.6892336879192357
+    Random Forest Recall: 0.5848905752422251
+Test scores:
+    Logistic Regression Recall: 0.6746186562629912
+    Random Forest Recall: 0.5647724728982124
+Pickling tools...
+Pickling failed.
+Pickling failed.
+Pickling failed.
+Logistic regression false positive rate:  0.3517335968647411
+False negative rate:  0.3253813437370087
+Random forest false positive rate:  0.3586773713263574
+False negative rate:  0.4352275271017876
