@@ -41,7 +41,8 @@ Each feature set was examined with a Logistic Regression and Random Forest Class
 To conduct the hyperparameter tuning, an F1 score was used in order to penalize false positives as well, thus preventing a false optimization of hyperparameters through maximization of recall at the expense of precision.
 
 The following is a confusion matrix of the final linear regression model:
-![Confusion matrix](Image\%20resources/Confusion\%20matrix.png)
+![Confusion matrix](Image\%20resources/Model\%207\%20confusion\%20matrix.svg)
+
 The model better predicts no-casualties than casualties. This is possibly due to the data being so imbalanced.
 
 #### Feature set 1: Clusters/Boroughs
